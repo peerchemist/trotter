@@ -21,6 +21,13 @@ contract TrotterNft is ERC1155, AccessControl {
     event CardAdded(uint256 id, uint256 maxSupply);
 
     /**
+     * @dev Get contract URL
+     */
+    function contractURI() public view returns (string memory) {
+        return string(uri(0));
+    }
+
+    /**
      * @notice Creates a new card for unique `NFT`.
      *
      * This signifies each unique NFT,
