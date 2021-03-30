@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { MongooseModule } from '@nestjs/mongoose';
+import config from './config/config';
+import { NftsModule } from './nfts/nfts.module';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [NftsModule, MongooseModule.forRoot(config.mongoURI)]
 })
 export class AppModule {}
