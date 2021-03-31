@@ -14,7 +14,13 @@ contract TrotterNft is ERC1155, AccessControl {
 
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
-    uint256 public cards;
+    struct nftMetadata {
+        string name;
+        string ipfsHash;
+    }
+
+    uint256 public cards = 0;
+    nftMetadata[] public nfts;
     mapping(uint256 => uint256) public totalSupply;
     mapping(uint256 => uint256) public circulatingSupply;
 
@@ -25,6 +31,28 @@ contract TrotterNft is ERC1155, AccessControl {
      */
     function contractURI() public view returns (string memory) {
         return string(uri(0));
+    }
+
+    /**
+     * @notice Creates nft card and mints a new NFT for first time.
+     *
+     * @param name Name of new NFT.
+     * @param ipfsHash ipfs hash of nft image the new minted NFT.
+     * @param newOwner Address to mint NFT to.
+     * @param maxSupply The max supply of NFT mintable.
+     * @param initialSupply The amount of NFT to mint initially.
+     */
+    function createNftCard(string memory name, string memory ipfsHash, address newOwner, uint256 maxSupply, uint256 initialSupply) public {
+        require(initialSupply > 0, "Initial supply less than 1");
+
+        nftMetadata memory newNft = nftMetadata({
+            name: name,
+            ipfsHash: ipfsHash
+        });
+
+        uint256 nftId = addCard(maxSupply);
+        nfts.push(newNft);
+        mint(newOwner, nftId, initialSupply);
     }
 
     /**
@@ -65,8 +93,9 @@ contract TrotterNft is ERC1155, AccessControl {
             circulatingSupply[id].add(amount) <= totalSupply[id],
             "Total supply reached."
         );
-        circulatingSupply[id] = circulatingSupply[id].add(amount);
+
         _mint(to, id, amount, "");
+        circulatingSupply[id] = circulatingSupply[id].add(amount);
     }
 
     /**
@@ -77,6 +106,7 @@ contract TrotterNft is ERC1155, AccessControl {
      */
     function burn(uint256 id, uint256 amount) public {
         _burn(_msgSender(), id, amount);
+        circulatingSupply[id] = circulatingSupply[id].sub(amount);
     }
 
     /**

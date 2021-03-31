@@ -61,7 +61,11 @@ contract("TrotterNFT", async (accounts) => {
     await instance.burn(2, 4, { from: accounts[2] });
     await truffleAssert.reverts(instance.burn(2, 4, { from: accounts[2] }));
     await truffleAssert.reverts(instance.burn(2, 1, { from: accounts[1] }));
+    // check balance
     balance = await instance.balanceOf(accounts[2], 2);
     assert.equal(1, balance.toNumber());
+    // check circulating
+    circulatingSupply = await instance.circulatingSupply(2);
+    assert.equal(1, circulatingSupply.toNumber());
   });
 });
