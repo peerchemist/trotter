@@ -9,4 +9,7 @@ export class CreateNftDto {
 
     @ApiProperty()
     readonly description: string;
+
+    @ApiProperty()
+    readonly totalSupply: string;
 }

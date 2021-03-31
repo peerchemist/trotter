@@ -1,3 +1,7 @@
+require('dotenv').config();
+
 export default {
-    mongoURI: "mongodb://localhost:27017/trotternfts?readPreference=primary&appname=MongoDB%20Compass&ssl=false"
+    mongoURI: process.env.MONGODB_URL,
+    web3Rpc: process.env.WEB3RPC,
+    wallet: process.env.WALLET
 }

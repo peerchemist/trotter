@@ -19,7 +19,7 @@ contract TrotterNft is ERC1155, AccessControl {
         string ipfsHash;
     }
 
-    uint256 public cards = 0;
+    uint256 public cards;
     nftMetadata[] public nfts;
     mapping(uint256 => uint256) public totalSupply;
     mapping(uint256 => uint256) public circulatingSupply;
