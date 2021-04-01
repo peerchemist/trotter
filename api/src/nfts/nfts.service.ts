@@ -31,7 +31,7 @@ export class NftsService {
       
       nftContract.setProvider(web3.currentProvider);
       const instance = await nftContract.deployed();
-      await instance.createNftCard(nft.name, nft.ipfsHash, nft.owner, nft.totalSupply, 1, { from: accounts[0] });
+      await instance.createNftCard(nft.name, nft.ipfsHash, nft.owner, nft.editions, 1, { from: accounts[0] });
       
       const newNft = new this.nftModel(nft);
       return await newNft.save();
