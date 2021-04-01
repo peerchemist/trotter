@@ -9,12 +9,12 @@ export class NftsController {
     constructor(private readonly nftsService: NftsService) { }
 
     @Get(':id')
-    findOne(@Param('id') id): Promise<Nft>  {
+    findOne(@Param('id') id): Promise<Nft> {
       return this.nftsService.findOne(id);
     }
 
     @Get()
-    findAll(): Promise<Nft[]>  {
+    findAll(): Promise<Nft[]> {
       return this.nftsService.findAll();
     }
 
