@@ -4,9 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Nft } from './interfaces/nft.interface';
 import ipfs from '../utils/ipfs';
 import web3 from 'src/utils/web3';
-import contracts from 'src/config/contracts';
 import * as trotterNftAbi from '../config/abi/trotterNft.json';
-const Web3 = require('web3');
 const contract = require("@truffle/contract");
 
 @Injectable()
@@ -15,6 +13,10 @@ export class NftsService {
 
   async findOne(id: string): Promise<Nft> {
     return await this.nftModel.findOne({ _id: id });
+  }
+
+  async findAll(): Promise<Nft[]> {
+    return await this.nftModel.find();
   }
 
   async create(nft: Nft, fileBuffer: Buffer): Promise<Nft> {

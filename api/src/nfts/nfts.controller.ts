@@ -13,6 +13,11 @@ export class NftsController {
       return this.nftsService.findOne(id);
     }
 
+    @Get()
+    findAll(): Promise<Nft[]>  {
+      return this.nftsService.findAll();
+    }
+
     @Post()
     @UseInterceptors(FileInterceptor('file'))
     create(@Body() createNftDto: CreateNftDto, @UploadedFile() file: Express.Multer.File): Promise<Nft> {
