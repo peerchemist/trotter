@@ -8,8 +8,8 @@ import { NftsService } from './nfts.service';
 export class NftsController {
     constructor(private readonly nftsService: NftsService) { }
 
-    @Get(':id')
-    findOne(@Param('id') id): Promise<Nft> {
+    @Get(':nftID')
+    findOne(@Param('nftID') id): Promise<Nft> {
       return this.nftsService.findOne(id);
     }
 
@@ -23,4 +23,9 @@ export class NftsController {
     create(@Body() createNftDto: CreateNftDto, @UploadedFile() file: Express.Multer.File): Promise<Nft> {
         return this.nftsService.create(createNftDto, file.buffer);
     }
+  
+  @Post('nftID')
+  generateQrCode(@Param('nftID') id): Promise<String> {
+    return this.nftsService.createQrCode(id)
+  }
 }

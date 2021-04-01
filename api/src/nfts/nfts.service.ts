@@ -6,6 +6,7 @@ import ipfs from '../utils/ipfs';
 import web3 from 'src/utils/web3';
 import * as trotterNftAbi from '../config/abi/trotterNft.json';
 const contract = require("@truffle/contract");
+import QRCode from 'qrcode' 
 
 @Injectable()
 export class NftsService {
@@ -38,5 +39,9 @@ export class NftsService {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  async createQrCode(nftId: string): Promise<String> {
+    return await QRCode.toDataURL(nftId);
   }
 }
