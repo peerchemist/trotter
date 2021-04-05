@@ -1,4 +1,4 @@
-import { Controller, Body, Get, Param, Post, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Body, Get, Param, Post, UseInterceptors, UploadedFile, ParseIntPipe } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateNftDto } from './dto/create-nft.dto';
 import { Nft } from './interfaces/nft.interface';
@@ -6,26 +6,26 @@ import { NftsService } from './nfts.service';
 
 @Controller('nfts')
 export class NftsController {
-    constructor(private readonly nftsService: NftsService) { }
+  constructor(private readonly nftsService: NftsService) { }
 
-    @Get(':nftID')
-    findOne(@Param('nftID') id): Promise<Nft> {
-      return this.nftsService.findOne(id);
-    }
+  @Get(':nftID')
+  findOne(@Param('nftID', ParseIntPipe) id: number): Promise<Nft> {
+    return this.nftsService.findOne(id);
+  }
 
-    @Get()
-    findAll(): Promise<Nft[]> {
-      return this.nftsService.findAll();
-    }
+  @Get()
+  findAll(): Promise<Nft[]> {
+    return this.nftsService.findAll();
+  }
 
-    @Post()
-    @UseInterceptors(FileInterceptor('file'))
-    create(@Body() createNftDto: CreateNftDto, @UploadedFile() file: Express.Multer.File): Promise<Nft> {
-        return this.nftsService.create(createNftDto, file.buffer);
-    }
-  
+  @Post()
+  @UseInterceptors(FileInterceptor('file'))
+  create(@Body() createNftDto: CreateNftDto, @UploadedFile() file: Express.Multer.File): Promise<Nft> {
+    return this.nftsService.create(createNftDto, file.buffer);
+  }
+
   @Post('nftID')
-  generateQrCode(@Param('nftID') id): Promise<String> {
+  generateQrCode(@Param('nftID', ParseIntPipe) id: number): Promise<String> {
     return this.nftsService.createQrCode(id)
   }
 }

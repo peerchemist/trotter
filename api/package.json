@@ -27,6 +27,8 @@
     "@nestjs/platform-express": "^7.6.15",
     "@nestjs/swagger": "^4.8.0",
     "@truffle/contract": "^4.3.12",
+    "class-transformer": "^0.4.0",
+    "class-validator": "^0.13.1",
     "dotenv": "^8.2.0",
     "ipfs-http-client": "^49.0.4",
     "mongoose": "^5.12.2",

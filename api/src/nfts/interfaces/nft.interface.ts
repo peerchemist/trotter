@@ -1,7 +1,7 @@
 export interface Nft {
     id?: string,
     network: string,
-    nftID?: string,
+    nftID?: number,
     owner: string,
     ipfsHash?: string,
     name: string,

@@ -12,7 +12,7 @@ import QRCode from 'qrcode'
 export class NftsService {
   constructor(@InjectModel('Nft') private readonly nftModel: Model<any>) {}
 
-  async findOne(id: string): Promise<Nft> {
+  async findOne(id: number): Promise<Nft> {
     return await this.nftModel.findOne({ nftId: id });
   }
 
@@ -24,6 +24,11 @@ export class NftsService {
     try {
       const res = await ipfs.add(fileBuffer);
       nft.ipfsHash = res.path;
+      nft.nftID = 1234
+      
+      const newNft = new this.nftModel(nft);
+      return await newNft.save();
+
       
       const accounts: string[] = await web3.eth.getAccounts();
       const nftContract = contract({
@@ -34,14 +39,14 @@ export class NftsService {
       const instance = await nftContract.deployed();
       await instance.createNftCard(nft.name, nft.ipfsHash, nft.owner, nft.editions, 1, { from: accounts[0] });
       
-      const newNft = new this.nftModel(nft);
+      const neNft = new this.nftModel(nft);
       return await newNft.save();
     } catch (error) {
       console.log(error);
     }
   }
 
-  async createQrCode(nftId: string): Promise<String> {
+  async createQrCode(nftId: number): Promise<String> {
     return await QRCode.toDataURL(nftId);
   }
 }
