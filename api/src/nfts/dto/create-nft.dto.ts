@@ -38,3 +38,4 @@ export class CreateNftDto {
     @ApiProperty()
     readonly statement: object;
 }
+

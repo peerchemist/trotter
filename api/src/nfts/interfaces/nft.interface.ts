@@ -13,3 +13,11 @@ export interface Nft {
     statement: object
     circulatingSupply?: number,
 }
+
+export interface TransferNft {
+    network: string,
+    tokenid: number,
+    fee: number,
+    from: string,
+    destination: string,
+}
