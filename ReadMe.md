@@ -10,4 +10,4 @@ Runing the api
 ```
 cd api && yarn && yarn start
 ```   
-Once project is up visit localhost://3000 to call endpoints and localhost://3000/api to use swagger UI   
+Once project is up visit localhost://3000 to call endpoints and localhost://3000/api to use swagger UI
