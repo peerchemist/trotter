@@ -10,7 +10,7 @@ export class NftsService {
   constructor(@InjectModel('Nft') private readonly nftModel: Model<any>) {}
 
   async findOne(id: number): Promise<Nft> {
-    return await this.nftModel.findOne({ nftId: id });
+    return await this.nftModel.findOne({ nftID: id });
   }
 
   async findAll(): Promise<Nft[]> {
