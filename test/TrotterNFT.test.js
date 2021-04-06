@@ -68,4 +68,14 @@ contract("TrotterNFT", async (accounts) => {
     circulatingSupply = await instance.circulatingSupply(2);
     assert.equal(1, circulatingSupply.toNumber());
   });
+
+  it("Create function works", async () => {
+    const instance = await TrotterNFT.deployed();
+    const minterRole = await instance.MINTER_ROLE.call();
+    await instance.grantRole(minterRole, accounts[1]);
+
+    await instance.createNftCard('big nft', "QmaZgH4KJT2xZxxPETuUnBvn3aDnEUgjUNwftfA4gk3RSG", 001, accounts[3], 10, 1, { from: accounts[1] });
+    let balance = await instance.balanceOf(accounts[3], 3);
+    assert.equal(1, balance.toNumber());
+  });
 });

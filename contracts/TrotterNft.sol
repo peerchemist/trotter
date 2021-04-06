@@ -8,16 +8,16 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 contract TrotterNft is ERC1155, AccessControl {
     using SafeMath for uint256;
 
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-
     constructor() ERC1155("https://www.trotter.finance/api/NFTs/") {
-        _setupRole(MINTER_ROLE, _msgSender());
+        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
     }
+
+    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
     struct nftMetadata {
         string name;
         string ipfsHash;
-        string price;
+        uint256 price;
     }
 
     uint256 public cards;
@@ -37,19 +37,27 @@ contract TrotterNft is ERC1155, AccessControl {
     /**
      * @notice Creates nft card and mints a new NFT for first time.
      *
-     * @param data
-              name: Name of new NFT. ipfsHash ipfs hash of nft image the new minted NFT.
-              ipfsHash: ipfshash for uploaded media
-              price: price for nft
+     * @param name Name of new NFT.
+     * @param ipfsHash ipfs hash of nft image the new minted NFT.
+     * @param price price to sell the nft.
      * @param newOwner Address to mint NFT to.
      * @param maxSupply The max supply of NFT mintable.
      * @param initialSupply The amount of NFT to mint initially.
      */
-    function createNftCard(nftMetadata memory data, address newOwner, uint256 maxSupply, uint256 initialSupply) public returns (uint256) {
+    function createNftCard(
+        string memory name,
+        string memory ipfsHash,
+        uint256 price,
+        address newOwner,
+        uint256 maxSupply,
+        uint256 initialSupply
+    ) public returns (uint256) {
         require(initialSupply > 0, "Initial supply less than 1");
 
+        nftMetadata memory newNft = nftMetadata({name: name, ipfsHash: ipfsHash, price: price});
+
         uint256 nftId = addCard(maxSupply);
-        nfts.push(data);
+        nfts.push(newNft);
         mint(newOwner, nftId, initialSupply);
 
         return nftId;
