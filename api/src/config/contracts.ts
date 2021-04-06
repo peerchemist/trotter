@@ -1,3 +1,3 @@
 export default {
-    trotterNft: "0xccfc0d88CDbAc8c50007B1256AFA49C16B0A64c0",
+    trotterNft: "0x58c581961a0D8082E801baA47d5d7179E7317bfc",
 }

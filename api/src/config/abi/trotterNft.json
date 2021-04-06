@@ -435,6 +435,11 @@
         "internalType": "string",
         "name": "ipfsHash",
         "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -628,6 +633,11 @@
         "type": "string"
       },
       {
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
+      },
+      {
         "internalType": "address",
         "name": "newOwner",
         "type": "address"
@@ -644,7 +654,13 @@
       }
     ],
     "name": "createNftCard",
-    "outputs": [],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },

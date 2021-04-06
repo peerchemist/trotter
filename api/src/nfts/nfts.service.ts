@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Nft } from './interfaces/nft.interface';
 import ipfs from '../utils/ipfs';
 import QRCode from 'qrcode' 
+import { createNFT } from 'src/utils/contractHelper';
 
 @Injectable()
 export class NftsService {
@@ -22,6 +23,12 @@ export class NftsService {
       const res = await ipfs.add(fileBuffer);
       nft.ipfsHash = res.path;
 
+      // send to nft smart contract
+      // const nftRes = await createNFT(nft);
+      // console.log(nftRes);
+
+      // return nft;
+      
       const newNft = new this.nftModel(nft);
       return await newNft.save();
     } catch (error) {

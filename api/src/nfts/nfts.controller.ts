@@ -24,7 +24,7 @@ export class NftsController {
     return this.nftsService.create(createNftDto, file.buffer);
   }
 
-  @Post('nftID')
+  @Post('generateQRCode/:nftID')
   generateQrCode(@Param('nftID', ParseIntPipe) id: number): Promise<String> {
     return this.nftsService.createQrCode(id)
   }
