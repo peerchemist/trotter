@@ -3,7 +3,6 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Nft } from './interfaces/nft.interface';
 import ipfs from '../utils/ipfs';
-import QRCode from 'qrcode' 
 import { createNFT } from 'src/utils/contractHelper';
 
 @Injectable()
@@ -22,7 +21,7 @@ export class NftsService {
     try {
       const res = await ipfs.add(fileBuffer);
       nft.ipfsHash = res.path;
-
+      nft.nftID = 1234
       // send to nft smart contract
       // const nftRes = await createNFT(nft);
       // console.log(nftRes);
@@ -34,9 +33,5 @@ export class NftsService {
     } catch (error) {
       console.log(error);
     }
-  }
-
-  async createQrCode(nftId: number): Promise<String> {
-    return await QRCode.toDataURL(nftId);
   }
 }
