@@ -21,12 +21,10 @@ export class NftsService {
     try {
       const res = await ipfs.add(fileBuffer);
       nft.ipfsHash = res.path;
-      nft.nftID = 1234
-      // send to nft smart contract
-      // const nftRes = await createNFT(nft);
-      // console.log(nftRes);
-
-      // return nft;
+      // send to nft smart contract for mint
+      const nftRes = await createNFT(nft);
+      // update nft object with nftId created on the blockchain
+      nft.nftID = nftRes.events.CardAdded.returnValues.id
       
       const newNft = new this.nftModel(nft);
       return await newNft.save();
