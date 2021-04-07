@@ -51,7 +51,7 @@ export class NftsService {
   async migrateNft(nft: MigrateNft): Promise<Nft> {
     try {
       // transfer nft smart contract from one blockchain network to another
-      await migrateNFT(nft.fromNetwork, nft.toNetwork, nft.tokenid);
+      // await migrateNFT(nft.fromNetwork, nft.toNetwork, nft.tokenid);
 
       // update nft on database with new network
       const nftData = await this.nftModel.findOne({ nftID: nft.tokenid });

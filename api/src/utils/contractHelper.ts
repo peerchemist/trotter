@@ -23,6 +23,6 @@ export const transferNFT = async (network: string, from: string, to: string, nft
 }
 
 export const migrateNFT = async (fromNetwork: string, toNetwork: string, nftID: number): Promise<any> => {
-    const [account, nftContract]: any[] = await getContract();
+    const [account, nftContract]: any[] = await getContract(fromNetwork);
     // return await nftContract.methods.safeTransferFrom(fromNetwork, toNetwork, nftID, 1).send({ from: account });
 }
