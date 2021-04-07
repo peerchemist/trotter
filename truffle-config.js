@@ -1,6 +1,7 @@
-const HDWalletProvider = require('@truffle/hdwallet-provider');
+const HDWalletProvider = require('@truffle/hdwallet-provider')
 const fs = require('fs')
 const mnemonic = fs.readFileSync('.secret').toString().trim()
+require('dotenv').config()
 
 module.exports = {
     // Uncommenting the defaults below
@@ -39,17 +40,35 @@ module.exports = {
             gasPrice: 30000000,
             // gasPrice:  30000000
         },
+        matictestnet: {
+            provider: () =>
+                new HDWalletProvider(
+                    mnemonic,
+                    `https://rpc-mumbai.maticvigil.com`
+                ),
+                network_id: 80001,
+                skipDryRun: true,
+        },
+        rinkedby: {
+            provider: () =>
+                new HDWalletProvider(
+                    mnemonic,
+                    `https://rinkeby.infura.io/v3/${process.env.rinkedbyKey}`
+                ),
+            network_id: 4,
+            skipDryRun: true,
+        },
     },
     compilers: {
         solc: {
             version: '>=0.6.12',
             settings: {
-            //     // See the solidity docs for advice about optimization and evmVersion
+                //     // See the solidity docs for advice about optimization and evmVersion
                 optimizer: {
                     enabled: true,
                     runs: 200,
                 },
-            //     evmVersion: "byzantium"
+                //     evmVersion: "byzantium"
             },
         },
     },

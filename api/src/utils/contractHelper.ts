@@ -6,7 +6,8 @@ import { Nft } from 'src/nfts/interfaces/nft.interface';
 export const getContract = async (network?: string): Promise<any[]> => {
     const web3 = Web3(network)
     const accounts: string[] = await web3.eth.getAccounts();
-    const nftContract: any = new web3.eth.Contract(trotterNftAbi, contracts.trotterNft);
+    const contractAddress = (network && contracts.trotterNft[network]) ? contracts.trotterNft[network] : contracts.trotterNft['BSC_TESTNET']
+    const nftContract: any = new web3.eth.Contract(trotterNftAbi, contractAddress);
 
     return [accounts[0], nftContract];
 }
