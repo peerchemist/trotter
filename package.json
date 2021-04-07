@@ -11,7 +11,7 @@
   "author": "Chris Ochuko",
   "dependencies": {
     "@openzeppelin/contracts": "^4.0.0",
-    "@truffle/hdwallet-provider": "^1.2.5",
+    "@truffle/hdwallet-provider": "^1.2.3",
     "truffle-assertions": "^0.9.2"
   },
   "devDependencies": {

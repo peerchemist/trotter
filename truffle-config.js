@@ -48,6 +48,7 @@ module.exports = {
                 ),
                 network_id: 80001,
                 skipDryRun: true,
+                timeoutBlocks: 200,
         },
         rinkedby: {
             provider: () =>
@@ -57,11 +58,12 @@ module.exports = {
                 ),
             network_id: 4,
             skipDryRun: true,
+            timeoutBlocks: 200,
         },
     },
     compilers: {
         solc: {
-            version: '>=0.6.12',
+            version: '0.8.0',
             settings: {
                 //     // See the solidity docs for advice about optimization and evmVersion
                 optimizer: {

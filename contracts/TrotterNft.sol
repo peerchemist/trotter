@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.6.12;
+pragma solidity =0.8.0;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
@@ -115,6 +115,22 @@ contract TrotterNft is ERC1155, AccessControl {
     function burn(uint256 id, uint256 amount) public {
         _burn(_msgSender(), id, amount);
         circulatingSupply[id] = circulatingSupply[id].sub(amount);
+    }
+
+    /**
+     * @notice Get an NFT with NFT id.
+     *
+     * @param id The card id to burn NFT from.
+     */
+    function getNft(uint256 id) public view returns(nftMetadata memory) {
+        return nfts[id - 1];
+    }
+
+    /**
+     * @notice Fetch all NFTs.
+     */
+    function fetchNfts() public view returns(nftMetadata[] memory) {
+        return nfts;
     }
 
     /**
