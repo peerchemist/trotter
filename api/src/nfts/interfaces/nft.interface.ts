@@ -21,3 +21,10 @@ export interface TransferNft {
     from: string,
     destination: string,
 }
+
+export interface MigrateNft {
+    fromNetwork: string,
+    toNetwork: string,
+    tokenid: number,
+    owner: string
+}
