@@ -5,6 +5,7 @@ export interface Nft {
     ipfsHash?: string,
     name: string,
     author: string,
+    owner?: string,
     about: string,
     editions: number
     price: number

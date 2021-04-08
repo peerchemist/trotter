@@ -1,6 +1,6 @@
 import { Controller, Body, Get, Param, Post, UseInterceptors, UploadedFile, ParseIntPipe } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { CreateNftDto } from './dto/create-nft.dto';
 import { MigrateNftDto } from './dto/migrate-nft.dto';
 import { TransferNftDto } from './dto/transfer-nft.dto';
@@ -13,6 +13,10 @@ export class NftsController {
 
   @ApiTags('admin')
   @Post('create')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    type: CreateNftDto,
+  })
   @UseInterceptors(FileInterceptor('file'))
   create(@Body() createNftDto: CreateNftDto, @UploadedFile() file: Express.Multer.File): Promise<Nft> {
     return this.nftsService.create(createNftDto, file.buffer);
