@@ -10,19 +10,13 @@ import Response from 'src/utils/response';
 export class NftsService {
   constructor(@InjectModel('Nft') private readonly nftModel: Model<any>) {}
 
+  // Get nft data from chain to validate what users preview
   async findOne(id: number): Promise<ResponseData> {
-    const localData = await this.nftModel.findOne({ nftID: id });
-    
-    if (!localData || !localData.nftID) {
-      const chainNft = await getNFT(id)
+    const chainNft = await getNFT(id)
+    if (!chainNft || !chainNft.name)
+      return Response({}, 'Nft metadata not found!!', false);
 
-      if (!chainNft || !chainNft.name)
-        return Response({}, 'Nft metadata not found!!', false);
-      
-      return Response(chainNft, '', true);
-    }
-
-    return Response(localData, '', true);
+    return Response(chainNft, '', true);
   }
 
   async findAll(): Promise<ResponseData> {
