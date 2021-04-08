@@ -9,7 +9,7 @@ export interface Nft {
     about: string,
     editions: number
     price: number
-    properties: object
+    properties?: object
     statement: object
     circulatingSupply?: number,
 }

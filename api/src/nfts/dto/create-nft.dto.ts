@@ -4,7 +4,7 @@ import { IsNotEmpty } from "class-validator";
 export class CreateNftDto {
     @ApiProperty({ type: 'string', format: 'binary' })
     file: any;
-    
+
     @ApiProperty()
     @IsNotEmpty()
     readonly network: string;
@@ -31,7 +31,7 @@ export class CreateNftDto {
     @IsNotEmpty()
     readonly price: number;
 
-    @ApiProperty()
+    @ApiProperty({ required: false })
     readonly properties: object;
 
     @ApiProperty()
