@@ -4,7 +4,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { CreateNftDto } from './dto/create-nft.dto';
 import { MigrateNftDto } from './dto/migrate-nft.dto';
 import { TransferNftDto } from './dto/transfer-nft.dto';
-import { Nft } from './interfaces/nft.interface';
+import { Nft, ResponseData } from './interfaces/nft.interface';
 import { NftsService } from './nfts.service';
 
 @Controller()
@@ -20,7 +20,7 @@ export class NftsController {
 
   @ApiTags('admin')
   @Get('token/:tokenId')
-  findOne(@Param('tokenId', ParseIntPipe) id: number): Promise<Nft> {
+  findOne(@Param('tokenId', ParseIntPipe) id: number): Promise<ResponseData> {
     return this.nftsService.findOne(id);
   }
 
@@ -32,7 +32,7 @@ export class NftsController {
 
   @ApiTags('admin')
   @Get('list')
-  findAll(): Promise<Nft[]> {
+  findAll(): Promise<ResponseData> {
     return this.nftsService.findAll();
   }
 

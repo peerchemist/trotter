@@ -28,3 +28,9 @@ export interface MigrateNft {
     tokenid: number,
     owner: string
 }
+
+export interface ResponseData {
+    success: boolean,
+    message: string,
+    data: object
+}

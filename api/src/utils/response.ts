@@ -1,8 +1,10 @@
-const Response = (data: object, status: string, success: boolean): object => {
+import { ResponseData } from "src/nfts/interfaces/nft.interface"
+
+const Response = (data: object, message: string, success?: boolean): ResponseData => {
     return {
-        status,
-        success: success ? success : false,
-        data
+        success: success ? success : true,
+        message,
+        data,
     }
 }
 
