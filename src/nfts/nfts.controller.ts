@@ -1,6 +1,6 @@
 import { Controller, Body, Get, Param, Post, UseInterceptors, UploadedFile, ParseIntPipe } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateNftDto } from './dto/create-nft.dto';
 import { MigrateNftDto } from './dto/migrate-nft.dto';
 import { TransferNftDto } from './dto/transfer-nft.dto';
@@ -13,6 +13,10 @@ export class NftsController {
 
   @ApiTags('admin')
   @Post('create')
+  @ApiResponse({ status: 201, description: 'item created.'})
+  @ApiResponse({ status: 400, description: 'invalid input.'})
+  @ApiResponse({ status: 409, description: 'an existing token already exists.'})
+  @ApiResponse({ status: 500, description: 'Unexpected error.'})
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     type: CreateNftDto,
