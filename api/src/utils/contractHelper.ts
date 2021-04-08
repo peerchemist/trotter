@@ -4,7 +4,7 @@ import contracts from 'src/config/contracts';
 import { Nft } from 'src/nfts/interfaces/nft.interface';
 
 export const getContract = async (network?: string): Promise<any[]> => {
-    const usenetwork = network && contracts.trotterNft[network] && process.env[network] ? network : 'MATIC_NETWORK';
+    const usenetwork = network && contracts.trotterNft[network] && process.env[network] ? network : 'MATIC_TESTNET';
     console.log({usenetwork});
     
     const web3 = Web3(usenetwork)
