@@ -440,6 +440,26 @@
         "internalType": "uint256",
         "name": "price",
         "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "author",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "about",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "properties",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "statement",
+        "type": "string"
       }
     ],
     "stateMutability": "view",
@@ -623,19 +643,46 @@
   {
     "inputs": [
       {
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "ipfsHash",
-        "type": "string"
-      },
-      {
-        "internalType": "uint256",
-        "name": "price",
-        "type": "uint256"
+        "components": [
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "ipfsHash",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "author",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "about",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "properties",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "statement",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct TrotterNft.nftMetadata",
+        "name": "data",
+        "type": "tuple"
       },
       {
         "internalType": "address",
@@ -750,6 +797,26 @@
             "internalType": "uint256",
             "name": "price",
             "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "author",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "about",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "properties",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "statement",
+            "type": "string"
           }
         ],
         "internalType": "struct TrotterNft.nftMetadata",
@@ -781,6 +848,26 @@
             "internalType": "uint256",
             "name": "price",
             "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "author",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "about",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "properties",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "statement",
+            "type": "string"
           }
         ],
         "internalType": "struct TrotterNft.nftMetadata[]",

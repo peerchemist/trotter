@@ -18,6 +18,10 @@ contract TrotterNft is ERC1155, AccessControl {
         string name;
         string ipfsHash;
         uint256 price;
+        string author;
+        string about;
+        string properties;
+        string statement;
     }
 
     uint256 public cards;
@@ -37,29 +41,21 @@ contract TrotterNft is ERC1155, AccessControl {
     /**
      * @notice Creates nft card and mints a new NFT for first time.
      *
-     * @param name Name of new NFT.
-     * @param ipfsHash ipfs hash of nft image the new minted NFT.
-     * @param price price to sell the nft.
+     * @param data Hash table containing nft metadata
      * @param newOwner Address to mint NFT to.
      * @param maxSupply The max supply of NFT mintable.
      * @param initialSupply The amount of NFT to mint initially.
      */
     function createNftCard(
-        string memory name,
-        string memory ipfsHash,
-        uint256 price,
+        nftMetadata memory data,
         address newOwner,
         uint256 maxSupply,
         uint256 initialSupply
     ) public returns (uint256) {
         require(initialSupply > 0, "Initial supply less than 1");
-
-        nftMetadata memory newNft = nftMetadata({name: name, ipfsHash: ipfsHash, price: price});
-
         uint256 nftId = addCard(maxSupply);
-        nfts.push(newNft);
+        nfts.push(data);
         mint(newOwner, nftId, initialSupply);
-
         return nftId;
     }
 
