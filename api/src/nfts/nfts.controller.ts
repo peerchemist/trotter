@@ -30,7 +30,7 @@ export class NftsController {
 
   @ApiTags('admin')
   @Post('token/:tokenId/migrate')
-  migrate(@Body() migrateNftDto: MigrateNftDto): Promise<Nft> {
+  migrate(@Body() migrateNftDto: MigrateNftDto): Promise<ResponseData> {
     return this.nftsService.migrateNft(migrateNftDto);
   }
 
@@ -42,7 +42,7 @@ export class NftsController {
 
   @ApiTags('admin')
   @Post('transfer')
-  transfer(@Body() transferNftDto: TransferNftDto): Promise<Nft> {
+  transfer(@Body() transferNftDto: TransferNftDto): Promise<ResponseData> {
     return this.nftsService.transferNft(transferNftDto);
   }
 }

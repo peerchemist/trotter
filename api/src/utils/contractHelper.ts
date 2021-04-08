@@ -4,7 +4,7 @@ import contracts from 'src/config/contracts';
 import { Nft } from 'src/nfts/interfaces/nft.interface';
 
 export const getContract = async (network?: string): Promise<any[]> => {
-    const usenetwork = network && contracts.trotterNft[network] && process.env[network] ? network : 'LOCAL';
+    const usenetwork = network && contracts.trotterNft[network] && process.env[network] ? network : 'MATIC_NETWORK';
     console.log({usenetwork});
     
     const web3 = Web3(usenetwork)
@@ -22,8 +22,13 @@ export const createNFT = async (nft: Nft): Promise<any> => {
 }
 
 export const transferNFT = async (network: string, from: string, to: string, nftID: number): Promise<any> => {
-    const [account, nftContract]: any[] = await getContract(network);
-    return await nftContract.methods.safeTransferFrom(from, to, nftID, 1).send({ from: account });
+    try {
+        const [account, nftContract]: any[] = await getContract(network);
+        return await nftContract.methods.safeTransferFrom(from, to, nftID, 1, Buffer.alloc(0, "binary")).send({ from: account });
+    } catch (error) {
+        throw new Error("Can't transfer NFT please check balance");
+        
+    }
 }
 
 export const migrateNFT = async (fromNetwork: string, toNetwork: string, nftID: number): Promise<any> => {

@@ -55,25 +55,35 @@ export class NftsService {
       return Response(save, 'Nft created successfully', true, nftRes.transactionHash);
     } catch (error) {
       console.log(error);
+      return Response({}, error.message, false);
     }
   }
   
-  async transferNft(nft: TransferNft): Promise<Nft> {
+  async transferNft(nft: TransferNft): Promise<ResponseData> {
     try {
       // transfer nft smart contract for mint
-      await transferNFT(nft.network, nft.from, nft.destination, nft.tokenid);
+      const nftRes = await transferNFT(nft.network, nft.from, nft.destination, nft.tokenid);
 
       // update nft on database with new owner
-      const nftData = await this.nftModel.findOne({ nftID: nft.tokenid });
+      let nftData = await this.nftModel.findOne({ nftID: nft.tokenid });
+      if (!nftData || !nftData.nftID) {
+        const chainNft = await getNFT(nft.tokenid)
+  
+        if (!chainNft || !chainNft.name)
+          return Response({}, 'Nft metadata not found!!', false);
+        
+        return Response(chainNft, 'Nft transferred successfully', true, nftRes.transactionHash);
+      }
+
       nftData.owner = nft.destination;
-      
-      return await nftData.save();
+      const newData = await nftData.save();
+      return Response(newData, 'Nft transferred successfully', true, nftRes.transactionHash);
     } catch (error) {
-      console.log(error);
+      return Response({}, error.message, false);
     }
   }
   
-  async migrateNft(nft: MigrateNft): Promise<Nft> {
+  async migrateNft(nft: MigrateNft): Promise<ResponseData> {
     try {
       // transfer nft smart contract from one blockchain network to another
       // await migrateNFT(nft.fromNetwork, nft.toNetwork, nft.tokenid);
@@ -85,6 +95,7 @@ export class NftsService {
       return await nftData.save();
     } catch (error) {
       console.log(error);
+      return Response({}, error.message, false);
     }
   }
 }
