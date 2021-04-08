@@ -31,8 +31,9 @@ export const migrateNFT = async (fromNetwork: string, toNetwork: string, nftID: 
     // return await nftContract.methods.safeTransferFrom(fromNetwork, toNetwork, nftID, 1).send({ from: account });
 }
 
-export const structResponse = (nft) => {
+export const structResponse = (nft, id) => {
     return {
+        nftID: id,
         name: nft['name'],
         ipfsHash: nft['ipfsHash'],
         price: nft['price'],
@@ -46,8 +47,8 @@ export const structResponse = (nft) => {
 export const fetchNFTs = async (): Promise<any> => {
     const [account, nftContract]: any[] = await getContract();
     const res = await nftContract.methods.fetchNfts().call({ from: account });
-    const data = res.map(nft => {
-        return structResponse(nft);
+    const data = res.map((nft, index) => {
+        return structResponse(nft, index+1);
     })
 
     return data
@@ -57,7 +58,7 @@ export const getNFT = async (id: number): Promise<any> => {
     const [account, nftContract]: any[] = await getContract();
     try {
         const res = await nftContract.methods.getNft(id).call({ from: account });
-        return structResponse(res);
+        return structResponse(res, id);
     } catch (error) {
         return {}
     }
