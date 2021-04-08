@@ -7,9 +7,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   
   const config = new DocumentBuilder()
-  .setTitle('Trotter Nft api wrapper')
-  .setDescription('Rest api wrapper to communicate an Nft smart contract from web')
-  .setVersion('1.0')
+  .setTitle('Trotter NFT API.')
+  .setDescription('Trotter does abstraction on creation of NFT tokens on multiple EVM-based blockchain networks.')
+  .setVersion('0.1')
   .build();
   
   const document = SwaggerModule.createDocument(app, config);
