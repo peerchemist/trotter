@@ -32,5 +32,6 @@ export interface MigrateNft {
 export interface ResponseData {
     success: boolean,
     message: string,
-    data: object
+    data: object,
+    transactionHash: string
 }

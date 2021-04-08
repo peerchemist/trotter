@@ -18,7 +18,7 @@ export class NftsController {
     type: CreateNftDto,
   })
   @UseInterceptors(FileInterceptor('file'))
-  create(@Body() createNftDto: CreateNftDto, @UploadedFile() file: Express.Multer.File): Promise<Nft> {
+  create(@Body() createNftDto: CreateNftDto, @UploadedFile() file: Express.Multer.File): Promise<ResponseData> {
     return this.nftsService.create(createNftDto, file.buffer);
   }
 

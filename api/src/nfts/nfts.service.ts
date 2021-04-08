@@ -40,17 +40,19 @@ export class NftsService {
     return Response(localNfts, 'Nfts fetched successfully', true);
   }
 
-  async create(nft: Nft, fileBuffer: Buffer): Promise<Nft> {
+  async create(nft: Nft, fileBuffer: Buffer): Promise<ResponseData> {
     try {
       const res = await ipfs.add(fileBuffer);
       nft.ipfsHash = res.path;
       // send to nft smart contract for mint
       const nftRes = await createNFT(nft);
+      
       // update nft object with nftId created on the blockchain
       nft.nftID = nftRes.events.CardAdded.returnValues.id
       
       const newNft = new this.nftModel(nft);
-      return await newNft.save();
+      const save = await newNft.save();
+      return Response(save, 'Nft created successfully', true, nftRes.transactionHash);
     } catch (error) {
       console.log(error);
     }
