@@ -13,10 +13,6 @@ export class NftsController {
 
   @ApiTags('admin')
   @Post('create')
-  @ApiResponse({ status: 201, description: 'item created.'})
-  @ApiResponse({ status: 400, description: 'invalid input.'})
-  @ApiResponse({ status: 409, description: 'an existing token already exists.'})
-  @ApiResponse({ status: 500, description: 'Unexpected error.'})
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     type: CreateNftDto,
