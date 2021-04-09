@@ -10,7 +10,7 @@ export interface Nft {
     editions: number
     price: number
     properties?: object
-    statement: object
+    statement?: object
     circulatingSupply?: number,
 }
 

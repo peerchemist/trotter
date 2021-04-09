@@ -34,7 +34,7 @@ export class CreateNftDto {
     @ApiProperty({ required: false })
     readonly properties: object;
 
-    @ApiProperty()
+    @ApiProperty(({ required: false }))
     readonly statement: object;
 }
 
