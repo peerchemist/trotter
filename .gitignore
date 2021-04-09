@@ -39,3 +39,6 @@ lerna-debug.log*
 # node files
 package-lock.json
 yarn.lock
+
+# test db
+mongodb
