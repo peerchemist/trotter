@@ -12,7 +12,7 @@ export const getContract = async (network?: string): Promise<any[]> => {
     const contractAddress = contracts.trotterNft[usenetwork]
     const nftContract: any = new web3.eth.Contract(trotterNftAbi, contractAddress);
 
-    return [accounts[0], nftContract];
+    return [accounts[0], nftContract, usenetwork];
 }
 
 export const createNFT = async (nft: Nft): Promise<any> => {
@@ -36,8 +36,9 @@ export const migrateNFT = async (fromNetwork: string, toNetwork: string, nftID: 
     // return await nftContract.methods.safeTransferFrom(fromNetwork, toNetwork, nftID, 1).send({ from: account });
 }
 
-export const structResponse = (nft, id) => {
+export const structResponse = (nft: any, id: number, network?: string) => {
     return {
+        network,
         nftID: id,
         name: nft['name'],
         ipfsHash: nft['ipfsHash'],
@@ -50,20 +51,20 @@ export const structResponse = (nft, id) => {
 }
 
 export const fetchNFTs = async (): Promise<any> => {
-    const [account, nftContract]: any[] = await getContract();
+    const [account, nftContract, network]: any[] = await getContract();
     const res = await nftContract.methods.fetchNfts().call({ from: account });
     const data = res.map((nft, index) => {
-        return structResponse(nft, index+1);
+        return structResponse(nft, index+1, network);
     })
 
     return data
 }
 
 export const getNFT = async (id: number): Promise<any> => {
-    const [account, nftContract]: any[] = await getContract();
+    const [account, nftContract, network]: any[] = await getContract();
     try {
         const res = await nftContract.methods.getNft(id).call({ from: account });
-        return structResponse(res, id);
+        return structResponse(res, id, network);
     } catch (error) {
         return {}
     }
