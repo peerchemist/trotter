@@ -1,6 +1,6 @@
 version: "3.5"
 services:
-  mongodb:
+  mongo:
     image : mongo
     container_name: mongodb
     environment:
@@ -10,4 +10,17 @@ services:
       - ./mongodb/database:/data/db
     ports:
       - 27017:27017
+    restart: unless-stopped
+  
+  trotter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: trotter
+    environment:
+      - MONGODB_URL="mongodb://mongo/trotternfts?readPreference=primary&appname=MongoDB%20Compass&ssl=false"
+    ports:
+      - 3000:3000
+    depends_on:
+      - mongo
     restart: unless-stopped
