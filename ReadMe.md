@@ -1,4 +1,6 @@
-## Trotter (NFT api layer)
+## Trotter
+
+Trotter does abstraction on creation of NFT tokens on multiple EVM-based blockchain networks.
 
 # Prepare
 
