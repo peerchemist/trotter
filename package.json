@@ -4,7 +4,7 @@
   "description": "Trotter does abstraction on creation of NFT tokens on multiple EVM-based blockchain networks.",
   "author": "Chris",
   "private": true,
-  "license": "ISC",
+  "license": "UNLICENSED",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
