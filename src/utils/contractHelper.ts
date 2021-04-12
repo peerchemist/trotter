@@ -41,6 +41,7 @@ export const structResponse = (nft: any, id: number, network?: string) => {
         network,
         nftID: id,
         name: nft['name'],
+        owner: nft['owner'],
         ipfsHash: nft['ipfsHash'],
         price: nft['price'],
         author: nft['author'],
@@ -54,7 +55,8 @@ export const fetchNFTs = async (): Promise<any> => {
     const [account, nftContract, network]: any[] = await getContract();
     const res = await nftContract.methods.fetchNfts().call({ from: account });
     const data = res.map((nft, index) => {
-        return structResponse(nft, index+1, network);
+        const nftObj = { ...nft, owner: account };
+        return structResponse(nftObj, index+1, network);
     })
 
     return data
@@ -64,7 +66,8 @@ export const getNFT = async (id: number): Promise<any> => {
     const [account, nftContract, network]: any[] = await getContract();
     try {
         const res = await nftContract.methods.getNft(id).call({ from: account });
-        return structResponse(res, id, network);
+        const nftObj = { ...res, owner: account }
+        return structResponse(nftObj, id, network);
     } catch (error) {
         return {}
     }
