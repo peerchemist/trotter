@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import config from '../config/config';
 
 export function auth(req: Request, res: Response, next: NextFunction) {
     // check for basic auth header
@@ -11,7 +12,10 @@ export function auth(req: Request, res: Response, next: NextFunction) {
     const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
     const [username, password] = credentials.split(':');
 
-    // check if user detail is valid
-
+    // check if api details is valid
+    if (config.adminUsername !== username || config.adminPassword !== password) {
+        return res.status(401).json({ message: 'Invalid Authentication Credentials' });
+    }
+    
     next();
 };

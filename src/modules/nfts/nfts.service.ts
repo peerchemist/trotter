@@ -12,7 +12,7 @@ export class NftsService {
 
   // Get nft data from chain to validate what users preview
   async findOne(id: number): Promise<ResponseData> {
-    const chainNft = await getNFT(id)
+    const chainNft = await getNFT(id);
     if (!chainNft || !chainNft.name)
       return Response({}, 'Nft metadata not found!!', false);
 
@@ -23,7 +23,7 @@ export class NftsService {
     const localNfts = await this.nftModel.find();
 
     if (localNfts.length < 1) {
-      const chainNfts = await fetchNFTs()
+      const chainNfts = await fetchNFTs();
       
       if (chainNfts.length < 1)
         return Response([], 'No nfts created yet!!', false);
