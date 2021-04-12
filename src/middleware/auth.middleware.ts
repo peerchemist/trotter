@@ -1,7 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import config from '../config/config';
 
+const PRODUCTION_ENV = 'production';
+
 export function auth(req: Request, res: Response, next: NextFunction) {
+
+    if (process.env.NODE_ENV !== PRODUCTION_ENV) {
+        next();
+        return
+    }
+
     // check for basic auth header
     if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
         return res.status(401).send({ message: 'Access Denied!!' });
