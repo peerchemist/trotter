@@ -9,8 +9,6 @@ postgres-data
 mongodb
 .DS_Store/
 migrations/
-tsconfig.build.json
-tsconfig.build.json
 .gitignore
 dist
 node_modules
