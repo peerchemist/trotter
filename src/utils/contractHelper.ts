@@ -9,7 +9,7 @@ export const getContract = async (network?: string): Promise<any[]> => {
     
     const web3 = Web3(usenetwork)
     const accounts: string[] = await web3.eth.getAccounts();
-    const contractAddress = contracts.trotterNft[usenetwork]
+    const contractAddress = contracts.trotterNft[usenetwork];
     const nftContract: any = new web3.eth.Contract(trotterNftAbi, contractAddress);
 
     return [accounts[0], nftContract, usenetwork];
@@ -17,7 +17,7 @@ export const getContract = async (network?: string): Promise<any[]> => {
 
 export const createNFT = async (nft: Nft): Promise<any> => {
     const [account, nftContract]: any[] = await getContract(nft.network);
-    const nftData = { name: nft.name, ipfsHash: nft.ipfsHash, price: nft.price, author: nft.author, about: nft.about, properties: JSON.stringify(nft.properties), statement: JSON.stringify(nft.statement) }
+    const nftData = { name: nft.name, ipfsHash: nft.ipfsHash, price: nft.price, author: nft.author, about: nft.about, properties: JSON.stringify(nft.properties || ''), statement: JSON.stringify(nft.statement || '') };
     return await nftContract.methods.createNftCard(nftData, account, nft.editions, 1).send({ from: account, gas: "1000000" });
 }
 
