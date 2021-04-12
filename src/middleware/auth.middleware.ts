@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import config from '../config/config';
 
-const PRODUCTION_ENV = 'production';
+const PRODUCTION_ENV = 'prod';
 
 export function auth(req: Request, res: Response, next: NextFunction) {
 
