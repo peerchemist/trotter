@@ -38,3 +38,42 @@ export class CreateNftDto {
     readonly statement: object;
 }
 
+export class MigrateNftDto {
+    @ApiProperty()
+    @IsNotEmpty()
+    readonly fromNetwork: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    readonly toNetwork: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    readonly tokenid: number;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    readonly owner: string;
+}
+
+export class TransferNftDto {
+    @ApiProperty()
+    @IsNotEmpty()
+    readonly network: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    readonly tokenid: number;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    readonly fee: number;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    readonly from: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    readonly destination: string;
+}

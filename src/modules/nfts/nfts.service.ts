@@ -1,8 +1,8 @@
 import { Injectable, Res } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { Nft, TransferNft, MigrateNft, ResponseData } from './interfaces/nft.interface';
-import ipfs from '../utils/ipfs';
+import { Nft, TransferNft, MigrateNft, ResponseData } from '../../models/interfaces/nft.interface';
+import ipfs from '../../utils/ipfs';
 import { createNFT, transferNFT, migrateNFT, fetchNFTs, getNFT } from 'src/utils/contractHelper';
 import Response from 'src/utils/response';
 

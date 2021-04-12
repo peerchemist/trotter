@@ -1,10 +1,8 @@
 import { Controller, Body, Get, Param, Post, UseInterceptors, UploadedFile, ParseIntPipe } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateNftDto } from './dto/create-nft.dto';
-import { MigrateNftDto } from './dto/migrate-nft.dto';
-import { TransferNftDto } from './dto/transfer-nft.dto';
-import { Nft, ResponseData } from './interfaces/nft.interface';
+import { CreateNftDto, MigrateNftDto, TransferNftDto } from '../../models/dtos/nft.dto';
+import { ResponseData } from '../../models/interfaces/nft.interface';
 import { NftsService } from './nfts.service';
 
 @Controller()

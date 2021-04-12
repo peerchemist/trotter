@@ -1,7 +1,7 @@
 import Web3 from 'src/utils/web3';
 import * as trotterNftAbi from '../config/abi/trotterNft.json';
 import contracts from 'src/config/contracts';
-import { Nft } from 'src/nfts/interfaces/nft.interface';
+import { Nft } from 'src/models/interfaces/nft.interface';
 
 export const getContract = async (network?: string): Promise<any[]> => {
     const usenetwork = network && contracts.trotterNft[network] && process.env[network] ? network : 'API_MATIC_TESTNET';
