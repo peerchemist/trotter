@@ -1,6 +1,8 @@
+import { HttpException, Res } from "@nestjs/common"
+import { Response } from "express"
 import { ResponseData } from "src/models/interfaces/nft.interface"
 
-const Response = (data: object, message: string, success?: boolean, transactionHash?: string): ResponseData => {
+export const response = (data: object, message: string, success?: boolean, transactionHash?: string): ResponseData => {
     return {
         success: success ? success : false,
         message,
@@ -9,4 +11,39 @@ const Response = (data: object, message: string, success?: boolean, transactionH
     }
 }
 
-export default Response
+export const structNftResponse = (nft: any, id: number, network?: string) => {
+    return {
+        network,
+        nftID: id,
+        name: nft['name'],
+        ipfsHash: nft['ipfsHash'],
+        price: nft['price'],
+        author: nft['author'],
+        about: nft['about'],
+        properties: JSON.parse(nft['properties']),
+        statement: JSON.parse(nft['statement']),
+    }
+}
+
+export const nftResponse = (errMessage: string) => {
+    const errorMsgs = [
+        { msg: 'Initial supply less than 1', status: 400 },
+        { msg: 'Maximum supply can not be 0', status: 400 },
+        { msg: 'Caller is not a minter', status: 401 },
+        { msg: 'Total supply reached.', status: 400 },
+        { msg: 'ERC1155: balance query for the zero address.', status: 400 },
+    ];
+
+    const resMsg = errorMsgs.find(msg => errMessage.includes(msg.msg) || errMessage == msg.msg)
+
+    if (!resMsg || !resMsg.msg)
+        throw new HttpException({
+            status: 500,
+            error: "Something went wrong!!",
+        }, 500);
+
+    throw new HttpException({
+        status: resMsg.status,
+        error: resMsg.msg,
+    }, resMsg.status);
+}
