@@ -5,7 +5,7 @@ const PRODUCTION_ENV = 'prod';
 
 export function auth(req: Request, res: Response, next: NextFunction) {
 
-    if (process.env.NODE_ENV !== PRODUCTION_ENV) {
+    if (config.nodeEnv.trim() !== PRODUCTION_ENV) {
         next();
         return
     }
