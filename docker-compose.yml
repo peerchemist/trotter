@@ -19,6 +19,8 @@ services:
     container_name: trotter
     environment:
       - MONGODB_URL="mongodb://mongo/trotternfts?readPreference=primary&appname=MongoDB%20Compass&ssl=false"
+      - WALLET=""
+      - TROTTER_NODE_ENV="develop"
     ports:
       - 3000:3000
     depends_on:
