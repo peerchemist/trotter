@@ -83,7 +83,6 @@ contract TrotterNft is ERC1155, AccessControl {
 
         nfts.push(data);
         getNft[nftId] = data;
-        nftOwners[nftId].push(newOwner);
 
         mint(newOwner, nftId, initialSupply);
         return nftId;
@@ -129,6 +128,7 @@ contract TrotterNft is ERC1155, AccessControl {
         );
 
         _mint(to, id, amount, "");
+        nftOwners[id].push(to);
         circulatingSupply[id] = circulatingSupply[id].add(amount);
     }
 
