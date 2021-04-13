@@ -18,6 +18,8 @@ export const structNftResponse = (nft: any, network?: string) => {
         ipfsHash: nft['ipfsHash'],
         price: nft['price'],
         author: nft['author'],
+        owner: nft['owner'],
+        balance: nft['balance'],
         editions: nft['editions'],
         circulatingSupply: nft['circulatingSupply'],
         about: nft['about'],

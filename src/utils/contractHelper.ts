@@ -77,7 +77,7 @@ export const fetchNFTHolders = async (id): Promise<any> => {
     const resholders = await Promise.all(holders);
     const res = [];
     for (let i = 0; i < resholders.length; i++) {
-        if (resholders[i] !== "0x0000000000000000000000000000000000000000") {
+        if (resholders[i] !== "0x0000000000000000000000000000000000000000" && !res.find(h => h.address == resholders[i])) {
             const balance = await nftContract.methods.balanceOf(resholders[i], id).call();
             res.push({ address: resholders[i], balance });
         }
@@ -105,4 +105,20 @@ export const checkNFTBalance = async (id: number, address: string): Promise<any>
 export const mintNFT = async (network: string, nftID: number, to: string, amount: number): Promise<any> => {
     const [account, nftContract]: any[] = await getContract(network);
     return await nftContract.methods.mint(to, nftID, amount).send({ from: account });
+}
+
+export const fetchNFTEditions = async (id: number): Promise<any> => {
+    const [account, nftContract, network]: any[] = await getContract();
+
+    const nft = await nftContract.methods.getNft(id).call({ from: account });
+    const holders = await fetchNFTHolders(id);
+
+    const res = [];
+    holders.map((holder) => {
+        const newObj = { ...nft, owner: holder.address, balance: holder.balance };
+        if (!res.find(h => h.owner == holder))
+            res.push(structNftResponse(newObj, network));
+    });
+
+    return res;
 }

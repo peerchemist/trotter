@@ -65,7 +65,7 @@ export class NftsController {
 
   @Get('/token/:tokenId/editions')
   findTokenEditions(@Param('tokenId', ParseIntPipe) id: number): Promise<ResponseData> {
-    return this.nftsService.findAll();
+    return this.nftsService.fetchTokenEditions(id);
   }
 
   @Post('/token/:tokenId/mint')

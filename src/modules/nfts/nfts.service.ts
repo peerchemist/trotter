@@ -3,7 +3,7 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Nft, TransferNft, MigrateNft, ResponseData, MintNft } from '../../models/interfaces/nft.interface';
 import ipfs from '../../utils/ipfs';
-import { createNFT, transferNFT, migrateNFT, fetchNFTs, getNFT, fetchNFTHolders, checkNFTBalance, mintNFT } from 'src/utils/contractHelper';
+import { createNFT, transferNFT, migrateNFT, fetchNFTs, getNFT, fetchNFTHolders, checkNFTBalance, mintNFT, fetchNFTEditions } from 'src/utils/contractHelper';
 import { response, nftResponse } from 'src/utils/response';
 
 @Injectable()
@@ -112,15 +112,28 @@ export class NftsService {
       return nftResponse(error.message)
     }
   }
-
+  
   async mintNewToken(id: number, data: MintNft): Promise<ResponseData> {
     try {
       const mintRes = await mintNFT(data.network, id, data.toAddress, data.amount);
       
       if (mintRes.length < 1)
-        return response([], 'Nft not found', false);
-
+      return response([], 'Nft not found', false);
+      
       return response({}, 'Nfts mint successfully', true, mintRes.transactionHash);
+    } catch (error) {
+      return nftResponse(error.message)
+    }
+  }
+
+  async fetchTokenEditions(id: number): Promise<ResponseData> {
+    try {
+      const getEditions = await fetchNFTEditions(id);
+      
+      if (getEditions.length < 1)
+        return response([], 'Nft not found', false);
+  
+      return response(getEditions, 'Nfts editions fetched successfully', true);
     } catch (error) {
       return nftResponse(error.message)
     }
