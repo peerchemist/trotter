@@ -15,6 +15,7 @@ contract TrotterNft is ERC1155, AccessControl {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
     struct nftMetadata {
+        uint256 nftID;
         string name;
         string ipfsHash;
         uint256 price;
@@ -26,6 +27,8 @@ contract TrotterNft is ERC1155, AccessControl {
 
     uint256 public cards;
     nftMetadata[] public nfts;
+    mapping(uint256 => nftMetadata) public getNft;
+    mapping(uint256 => address[]) public nftOwners;
     mapping(uint256 => uint256) public totalSupply;
     mapping(uint256 => uint256) public circulatingSupply;
 
@@ -41,20 +44,47 @@ contract TrotterNft is ERC1155, AccessControl {
     /**
      * @notice Creates nft card and mints a new NFT for first time.
      *
-     * @param data Hash table containing nft metadata
+     * @param name Name of nft
+     * @param ipfsHash Ipfs Hash of nft media
+     * @param price Price of nft (in eth)
+     * @param author Author of nft
+     * @param about More details about nft
+     * @param properties Properties details about nft
+     * @param statement Any statement details about nft
      * @param newOwner Address to mint NFT to.
      * @param maxSupply The max supply of NFT mintable.
      * @param initialSupply The amount of NFT to mint initially.
      */
     function createNftCard(
-        nftMetadata memory data,
+        string memory name,
+        string memory ipfsHash,
+        uint256 price,
+        string memory author,
+        string memory about,
+        string memory properties,
+        string memory statement,
         address newOwner,
         uint256 maxSupply,
         uint256 initialSupply
     ) public returns (uint256) {
         require(initialSupply > 0, "Initial supply less than 1");
         uint256 nftId = addCard(maxSupply);
+
+        nftMetadata memory data = nftMetadata({
+            nftID: nftId,
+            name: name,
+            ipfsHash: ipfsHash,
+            price: price,
+            author: author,
+            about: about,
+            properties: properties,
+            statement: statement
+        });
+
         nfts.push(data);
+        getNft[nftId] = data;
+        nftOwners[nftId].push(newOwner);
+
         mint(newOwner, nftId, initialSupply);
         return nftId;
     }
@@ -109,24 +139,18 @@ contract TrotterNft is ERC1155, AccessControl {
      * @param amount The amount of NFT to burn from this card.
      */
     function burn(uint256 id, uint256 amount) public {
-        _burn(_msgSender(), id, amount);
+        address sender = _msgSender();
+        _burn(sender, id, amount);
+
+        delete getNft[id];
+        for (uint256 index = 0; index < nfts.length; index++) {
+            if(nftOwners[id][index] == sender) {
+                delete nftOwners[id][index];
+                break;
+            }
+        }
+
         circulatingSupply[id] = circulatingSupply[id].sub(amount);
-    }
-
-    /**
-     * @notice Get an NFT with NFT id.
-     *
-     * @param id The card id to burn NFT from.
-     */
-    function getNft(uint256 id) public view returns(nftMetadata memory) {
-        return nfts[id - 1];
-    }
-
-    /**
-     * @notice Fetch all NFTs.
-     */
-    function fetchNfts() public view returns(nftMetadata[] memory) {
-        return nfts;
     }
 
     /**

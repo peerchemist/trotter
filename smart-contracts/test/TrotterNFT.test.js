@@ -71,16 +71,7 @@ contract('TrotterNFT', async (accounts) => {
     const minterRole = await instance.MINTER_ROLE.call();
     await instance.grantRole(minterRole, accounts[1]);
 
-    await instance.createNftCard(
-      {
-        name: 'big nft',
-        ipfsHash: 'QmaZgH4KJT2xZxxPETuUnBvn3aDnEUgjUNwftfA4gk3RSG',
-        price: 001,
-        author: 'Chris',
-        about: 'new',
-        properties: '',
-        statement: '',
-      },
+    await instance.createNftCard('big nft', 'QmaZgH4KJT2xZxxPETuUnBvn3aDnEUgjUNwftfA4gk3RSG', 001, 'Chris', 'new', '', '',
       accounts[3],
       10,
       1,
