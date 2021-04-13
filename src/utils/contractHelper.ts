@@ -5,7 +5,7 @@ import { Nft } from 'src/models/interfaces/nft.interface';
 import { structNftResponse } from './response';
 
 export const getContract = async (network?: string): Promise<any[]> => {
-    const usenetwork = network && contracts.trotterNft[network] && process.env[network] ? network : 'API_LOCAL';
+    const usenetwork = network && contracts.trotterNft[network] && process.env[network] ? network : 'API_MATIC_TESTNET';
     console.log({usenetwork});
     
     const web3 = Web3(usenetwork)
@@ -19,9 +19,7 @@ export const getContract = async (network?: string): Promise<any[]> => {
 export const createNFT = async (nft: Nft): Promise<any> => {
     const [account, nftContract]: any[] = await getContract(nft.network);
     // const nftData = { name: nft.name, ipfsHash: nft.ipfsHash, price: nft.price, author: nft.author, about: nft.about, properties: JSON.stringify(nft.properties || ''), statement: JSON.stringify(nft.statement || '') };
-    const nftData = [nft.name, nft.ipfsHash, nft.price, nft.author, nft.about, JSON.stringify(nft.properties || ''), JSON.stringify(nft.statement || '')];
-    console.log(nft.editions);
-    
+    const nftData = [nft.name, nft.ipfsHash, nft.price, nft.author, nft.about, JSON.stringify(nft.properties || ''), JSON.stringify(nft.statement || '')];    
     return await nftContract.methods.createNftCard(...nftData, account, nft.editions, 1).send({ from: account, gas: "1000000" });
 }
 
@@ -45,8 +43,8 @@ export const fetchNFTs = async (): Promise<any> => {
 
     for (let i = 0; i < cards; i++) {
         nfts.push(nftContract.methods.nfts(i).call({ from: account }));
-        maxs.push(nftContract.methods.totalSupply(i).call());
-        circulatings.push(nftContract.methods.circulatingSupply(i).call());
+        maxs.push(nftContract.methods.totalSupply(i + 1).call());
+        circulatings.push(nftContract.methods.circulatingSupply(i + 1).call());
     }
     
     const resMaxs = await Promise.all(maxs);
