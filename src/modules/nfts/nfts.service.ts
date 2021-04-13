@@ -103,7 +103,7 @@ export class NftsService {
   async fetchTokenHolders(id: number): Promise<ResponseData> {
     try {
       const chainNfts = await fetchNFTHolders(id);
-
+      
       if (chainNfts.length < 1)
         return response([], 'Nft not found', false);
 

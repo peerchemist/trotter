@@ -61,7 +61,6 @@ export const fetchNFTs = async (): Promise<any> => {
 
 export const fetchNFTHolders = async (id): Promise<any> => {
     const [account, nftContract, network]: any[] = await getContract();
-    const cards = await nftContract.methods.cards().call({ from: account });
 
     const holders = [];
     let moreHolder = true;
@@ -75,9 +74,16 @@ export const fetchNFTHolders = async (id): Promise<any> => {
         }
     }
     
-    return Promise.all(holders).then(holders => {
-        return holders;
-    });
+    const resholders = await Promise.all(holders);
+    const res = [];
+    for (let i = 0; i < resholders.length; i++) {
+        if (resholders[i] !== "0x0000000000000000000000000000000000000000") {
+            const balance = await nftContract.methods.balanceOf(resholders[i], id).call();
+            res.push({ address: resholders[i], balance });
+        }
+    }
+    
+    return res;
 }
 
 export const getNFT = async (id: number): Promise<any> => {
