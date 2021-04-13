@@ -53,13 +53,13 @@ export class NftsController {
     return this.nftsService.findAll();
   }
 
-  @Get('/token/{tokenid}/owners')
-  findTokenOwners(): Promise<ResponseData> {
-    return this.nftsService.findAll();
+  @Get('/token/:tokenId/owners')
+  findTokenOwners(@Param('tokenId', ParseIntPipe) id: number): Promise<ResponseData> {
+    return this.nftsService.fetchTokenHolders(id);
   }
 
-  @Get('/token/{tokenid}/editions')
-  findTokenEditions(): Promise<ResponseData> {
+  @Get('/token/:tokenId/editions')
+  findTokenEditions(@Param('tokenId', ParseIntPipe) id: number): Promise<ResponseData> {
     return this.nftsService.findAll();
   }
 }

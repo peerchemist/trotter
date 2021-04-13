@@ -3,7 +3,7 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Nft, TransferNft, MigrateNft, ResponseData } from '../../models/interfaces/nft.interface';
 import ipfs from '../../utils/ipfs';
-import { createNFT, transferNFT, migrateNFT, fetchNFTs, getNFT } from 'src/utils/contractHelper';
+import { createNFT, transferNFT, migrateNFT, fetchNFTs, getNFT, fetchNFTHolders } from 'src/utils/contractHelper';
 import { response, nftResponse } from 'src/utils/response';
 
 @Injectable()
@@ -91,6 +91,19 @@ export class NftsService {
     } catch (error) {
       console.log(error);
       return nftResponse(error.message);
+    }
+  }
+
+  async fetchTokenHolders(id: number): Promise<ResponseData> {
+    try {
+      const chainNfts = await fetchNFTHolders(id);
+
+      if (chainNfts.length < 1)
+        return response([], 'Nft not found', false);
+
+      return response(chainNfts, 'Nfts holders fetched successfully', true);
+    } catch (error) {
+      return nftResponse(error.message)
     }
   }
 }

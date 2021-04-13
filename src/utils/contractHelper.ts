@@ -49,6 +49,27 @@ export const fetchNFTs = async (): Promise<any> => {
     });
 }
 
+export const fetchNFTHolders = async (id): Promise<any> => {
+    const [account, nftContract, network]: any[] = await getContract();
+    const cards = await nftContract.methods.cards().call({ from: account });
+
+    const holders = [];
+    let moreHolder = true;
+    let i = 0;
+    while (moreHolder) {
+        try {
+            holders.push((await nftContract.methods.nftOwners(id, i).call({ from: account })));
+            i++;
+        } catch (error) {
+            moreHolder = false;
+        }
+    }
+    
+    return Promise.all(holders).then(holders => {
+        return holders;
+    });
+}
+
 export const getNFT = async (id: number): Promise<any> => {
     const [account, nftContract, network]: any[] = await getContract();
     const res = await nftContract.methods.nfts(id).call({ from: account });

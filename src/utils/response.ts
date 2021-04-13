@@ -29,8 +29,9 @@ export const nftResponse = (errMessage: string) => {
         { msg: 'Initial supply less than 1', status: 400 },
         { msg: 'Maximum supply can not be 0', status: 400 },
         { msg: 'Caller is not a minter', status: 401 },
-        { msg: 'Total supply reached.', status: 400 },
-        { msg: 'ERC1155: balance query for the zero address.', status: 400 },
+        { msg: 'Total supply reached', status: 400 },
+        { msg: 'ERC1155: balance query for the zero address', status: 400 },
+        { msg: 'ERC1155: insufficient balance for transfer', status: 400 },
     ];
 
     const resMsg = errorMsgs.find(msg => errMessage.includes(msg.msg) || errMessage == msg.msg)
