@@ -1,6 +1,6 @@
 import { Controller, Body, Get, Param, Post, UseInterceptors, UploadedFile, ParseIntPipe } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateNftDto, MigrateNftDto, TransferNftDto } from '../../models/dtos/nft.dto';
 import { ResponseData } from '../../models/interfaces/nft.interface';
 import { NftsService } from './nfts.service';
@@ -15,6 +15,10 @@ export class NftsController {
   @ApiBody({
     type: CreateNftDto,
   })
+  @ApiResponse({ status: 201, description: 'item created'})
+  @ApiResponse({ status: 400, description: 'invalid input | {msg}'})
+  @ApiResponse({ status: 409, description: 'an existing token already exists.'})
+  @ApiResponse({ status: 500, description: 'unexpected error.'})
   @UseInterceptors(FileInterceptor('file'))
   create(@Body() createNftDto: CreateNftDto, @UploadedFile() file: Express.Multer.File): Promise<ResponseData> {
     return this.nftsService.create(createNftDto, file.buffer);
@@ -22,8 +26,19 @@ export class NftsController {
 
   @ApiTags('admin')
   @Get('token/:tokenId')
+  @ApiResponse({ status: 201, description: 'token items.'})
+  @ApiResponse({ status: 404, description: 'token not found.'})
+  @ApiResponse({ status: 400, description: 'invalid input'})
+  @ApiResponse({ status: 409, description: 'no tokens.' })
+  @ApiResponse({ status: 500, description: 'unexpected error.'})
   findOne(@Param('tokenId', ParseIntPipe) id: number): Promise<ResponseData> {
     return this.nftsService.findOne(id);
+  }
+
+  @ApiTags('admin')
+  @Post('transfer')
+  transfer(@Body() transferNftDto: TransferNftDto): Promise<ResponseData> {
+    return this.nftsService.transferNft(transferNftDto);
   }
 
   @ApiTags('admin')
@@ -38,9 +53,13 @@ export class NftsController {
     return this.nftsService.findAll();
   }
 
-  @ApiTags('admin')
-  @Post('transfer')
-  transfer(@Body() transferNftDto: TransferNftDto): Promise<ResponseData> {
-    return this.nftsService.transferNft(transferNftDto);
+  @Get('/token/{tokenid}/owners')
+  findTokenOwners(): Promise<ResponseData> {
+    return this.nftsService.findAll();
+  }
+
+  @Get('/token/{tokenid}/editions')
+  findTokenEditions(): Promise<ResponseData> {
+    return this.nftsService.findAll();
   }
 }
