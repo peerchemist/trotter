@@ -53,6 +53,11 @@ export class NftsController {
     return this.nftsService.findAll();
   }
 
+  @Get('/balance/:tokenId/:address')
+  checkBalance(@Param('tokenId', ParseIntPipe) id: number, @Param('address') address: string): Promise<ResponseData> {
+    return this.nftsService.checkBalance(id, address);
+  }
+
   @Get('/token/:tokenId/owners')
   findTokenOwners(@Param('tokenId', ParseIntPipe) id: number): Promise<ResponseData> {
     return this.nftsService.fetchTokenHolders(id);

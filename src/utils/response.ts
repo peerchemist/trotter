@@ -18,6 +18,8 @@ export const structNftResponse = (nft: any, network?: string) => {
         ipfsHash: nft['ipfsHash'],
         price: nft['price'],
         author: nft['author'],
+        editions: nft['editions'],
+        circulatingSupply: nft['circulatingSupply'],
         about: nft['about'],
         properties: JSON.parse(nft['properties']),
         statement: JSON.parse(nft['statement']),
@@ -36,12 +38,14 @@ export const nftResponse = (errMessage: string) => {
 
     const resMsg = errorMsgs.find(msg => errMessage.includes(msg.msg) || errMessage == msg.msg)
 
+    console.log(errMessage);
+    
     if (!resMsg || !resMsg.msg)
         throw new HttpException({
             status: 500,
             error: "unexpected error",
         }, 500);
-
+    
     throw new HttpException({
         status: resMsg.status,
         error: resMsg.msg,

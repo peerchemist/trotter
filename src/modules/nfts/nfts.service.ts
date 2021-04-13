@@ -3,7 +3,7 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Nft, TransferNft, MigrateNft, ResponseData } from '../../models/interfaces/nft.interface';
 import ipfs from '../../utils/ipfs';
-import { createNFT, transferNFT, migrateNFT, fetchNFTs, getNFT, fetchNFTHolders } from 'src/utils/contractHelper';
+import { createNFT, transferNFT, migrateNFT, fetchNFTs, getNFT, fetchNFTHolders, checkNFTBalance } from 'src/utils/contractHelper';
 import { response, nftResponse } from 'src/utils/response';
 
 @Injectable()
@@ -56,23 +56,29 @@ export class NftsService {
 
   async transferNft(nft: TransferNft): Promise<ResponseData> {
     try {
-      // transfer nft smart contract for mint
+      // transfer nft 
       const nftRes = await transferNFT(nft.network, nft.from, nft.destination, nft.tokenid);
+      const chainNft = await getNFT(nft.tokenid)
 
-      // update nft on database with new owner
-      let nftData = await this.nftModel.findOne({ nftID: nft.tokenid });
-      if (!nftData || !nftData.nftID) {
-        const chainNft = await getNFT(nft.tokenid)
+      if (!chainNft || !chainNft.name)
+        return response({}, 'Nft metadata not found!!', false);
 
-        if (!chainNft || !chainNft.name)
-          return response({}, 'Nft metadata not found!!', false);
+      return response(chainNft, 'Nft transfered successfully', true, nftRes.transactionHash);
 
-        return response(chainNft, 'Nft transferred successfully', true, nftRes.transactionHash);
-      }
+    } catch (error) {
+      return nftResponse(error.message);
+    }
+  }
 
-      nftData.owner = nft.destination;
-      const newData = await nftData.save();
-      return response(newData, 'Nft transferred successfully', true, nftRes.transactionHash);
+  async checkBalance(id: number, address: string): Promise<ResponseData> {
+    try {
+      // transfer nft 
+      const nftRes = await checkNFTBalance(id, address);
+
+      if (!nftRes || !nftRes.balance)
+        return response({}, 'Nft not found!!', false);
+
+      return response(nftRes, 'Nft balance', true);
     } catch (error) {
       return nftResponse(error.message);
     }
