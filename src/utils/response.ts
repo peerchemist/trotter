@@ -43,11 +43,13 @@ export const nftResponse = (errMessage: string) => {
     if (!resMsg || !resMsg.msg)
         throw new HttpException({
             status: 500,
-            error: "unexpected error",
+            success: false,
+            message: "unexpected error",
         }, 500);
     
     throw new HttpException({
         status: resMsg.status,
-        error: resMsg.msg,
+        success: false,
+        message: resMsg.msg,
     }, resMsg.status);
 }
