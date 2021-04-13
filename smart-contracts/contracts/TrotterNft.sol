@@ -154,6 +154,25 @@ contract TrotterNft is ERC1155, AccessControl {
     }
 
     /**
+     * @notice Transfer an NFT to different owner.
+     *
+     * @param id The card id to burn NFT from.
+     * @param amount The amount of NFT to transfer.
+     */
+    function transfer(address from, address to, uint256 id, uint256 amount) public {
+        safeTransferFrom(from, to, id, amount, "");
+        
+        for (uint256 index = 0; index < nfts.length; index++) {
+            if(nftOwners[id][index] == from) {
+                delete nftOwners[id][index];
+                break;
+            }
+        }
+
+        nftOwners[id].push(to);
+    }
+
+    /**
      * @dev ERC1155 and AccessControl include supportsInterface so we need to override both
      */
     function supportsInterface(bytes4 interfaceId)
