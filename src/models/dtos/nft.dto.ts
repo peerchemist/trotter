@@ -77,3 +77,22 @@ export class TransferNftDto {
     @IsNotEmpty()
     readonly destination: string;
 }
+
+
+export class MintNftDto {
+    @ApiProperty()
+    @IsNotEmpty()
+    readonly network: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    readonly fee?: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    readonly toAddress: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    readonly amount: number;
+}

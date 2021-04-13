@@ -101,3 +101,8 @@ export const checkNFTBalance = async (id: number, address: string): Promise<any>
         balance: res,
     };
 }
+
+export const mintNFT = async (network: string, nftID: number, to: string, amount: number): Promise<any> => {
+    const [account, nftContract]: any[] = await getContract(network);
+    return await nftContract.methods.mint(to, nftID, amount).send({ from: account });
+}

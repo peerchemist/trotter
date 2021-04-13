@@ -1,7 +1,7 @@
 import { Controller, Body, Get, Param, Post, UseInterceptors, UploadedFile, ParseIntPipe } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateNftDto, MigrateNftDto, TransferNftDto } from '../../models/dtos/nft.dto';
+import { CreateNftDto, MigrateNftDto, MintNftDto, TransferNftDto } from '../../models/dtos/nft.dto';
 import { ResponseData } from '../../models/interfaces/nft.interface';
 import { NftsService } from './nfts.service';
 
@@ -66,5 +66,10 @@ export class NftsController {
   @Get('/token/:tokenId/editions')
   findTokenEditions(@Param('tokenId', ParseIntPipe) id: number): Promise<ResponseData> {
     return this.nftsService.findAll();
+  }
+
+  @Post('/token/:tokenId/mint')
+  mintNewToken(@Body() mintNftDto: MintNftDto, @Param('tokenId', ParseIntPipe) id: number): Promise<ResponseData> {
+    return this.nftsService.mintNewToken(id, mintNftDto);
   }
 }

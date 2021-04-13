@@ -35,3 +35,10 @@ export interface ResponseData {
     data: object,
     transactionHash: string
 }
+
+export interface MintNft {
+    network: string,
+    fee?: string,
+    toAddress: string,
+    amount: number,
+}
