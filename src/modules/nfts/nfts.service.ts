@@ -25,18 +25,12 @@ export class NftsService {
 
   async findAll(): Promise<ResponseData> {
     try {
-      const localNfts = await this.nftModel.find();
-  
-      if (localNfts.length < 1) {
-        const chainNfts = await fetchNFTs();
-  
-        if (chainNfts.length < 1)
-          return response([], 'No nfts created yet!!', false);
-  
-        return response(chainNfts, 'Nfts fetched successfully', true);
-      }
-  
-      return response(localNfts, 'Nfts fetched successfully', true);
+      const chainNfts = await fetchNFTs();
+
+      if (chainNfts.length < 1)
+        return response([], 'No nfts created yet!!', false);
+
+      return response(chainNfts, 'Nfts fetched successfully', true);
     } catch (error) {
       return nftResponse(error.message)
     }

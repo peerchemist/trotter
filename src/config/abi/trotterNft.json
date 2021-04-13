@@ -331,6 +331,61 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "getNft",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "nftID",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "ipfsHash",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "author",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "about",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "properties",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "statement",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
         "internalType": "bytes32",
         "name": "role",
         "type": "bytes32"
@@ -422,10 +477,40 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "nftOwners",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "name": "nfts",
     "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "nftID",
+        "type": "uint256"
+      },
       {
         "internalType": "string",
         "name": "name",
@@ -643,46 +728,39 @@
   {
     "inputs": [
       {
-        "components": [
-          {
-            "internalType": "string",
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "ipfsHash",
-            "type": "string"
-          },
-          {
-            "internalType": "uint256",
-            "name": "price",
-            "type": "uint256"
-          },
-          {
-            "internalType": "string",
-            "name": "author",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "about",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "properties",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "statement",
-            "type": "string"
-          }
-        ],
-        "internalType": "struct TrotterNft.nftMetadata",
-        "name": "data",
-        "type": "tuple"
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "ipfsHash",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "author",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "about",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "properties",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "statement",
+        "type": "string"
       },
       {
         "internalType": "address",
@@ -774,110 +852,30 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
         "name": "id",
         "type": "uint256"
-      }
-    ],
-    "name": "getNft",
-    "outputs": [
+      },
       {
-        "components": [
-          {
-            "internalType": "string",
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "ipfsHash",
-            "type": "string"
-          },
-          {
-            "internalType": "uint256",
-            "name": "price",
-            "type": "uint256"
-          },
-          {
-            "internalType": "string",
-            "name": "author",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "about",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "properties",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "statement",
-            "type": "string"
-          }
-        ],
-        "internalType": "struct TrotterNft.nftMetadata",
-        "name": "",
-        "type": "tuple"
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
       }
     ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
-    "inputs": [],
-    "name": "fetchNfts",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "string",
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "ipfsHash",
-            "type": "string"
-          },
-          {
-            "internalType": "uint256",
-            "name": "price",
-            "type": "uint256"
-          },
-          {
-            "internalType": "string",
-            "name": "author",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "about",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "properties",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "statement",
-            "type": "string"
-          }
-        ],
-        "internalType": "struct TrotterNft.nftMetadata[]",
-        "name": "",
-        "type": "tuple[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
+    "name": "transfer",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
     "inputs": [

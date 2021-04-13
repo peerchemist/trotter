@@ -1,5 +1,4 @@
 import { HttpException, Res } from "@nestjs/common"
-import { Response } from "express"
 import { ResponseData } from "src/models/interfaces/nft.interface"
 
 export const response = (data: object, message: string, success?: boolean, transactionHash?: string): ResponseData => {
@@ -11,10 +10,10 @@ export const response = (data: object, message: string, success?: boolean, trans
     }
 }
 
-export const structNftResponse = (nft: any, id: number, network?: string) => {
+export const structNftResponse = (nft: any, network?: string) => {
     return {
         network,
-        nftID: id,
+        nftID: nft['nftID'],
         name: nft['name'],
         ipfsHash: nft['ipfsHash'],
         price: nft['price'],
@@ -39,7 +38,7 @@ export const nftResponse = (errMessage: string) => {
     if (!resMsg || !resMsg.msg)
         throw new HttpException({
             status: 500,
-            error: "Something went wrong!!",
+            error: "unexpected error",
         }, 500);
 
     throw new HttpException({
