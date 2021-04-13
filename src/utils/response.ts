@@ -34,6 +34,7 @@ export const nftResponse = (errMessage: string) => {
         { msg: 'Total supply reached', status: 400 },
         { msg: 'ERC1155: balance query for the zero address', status: 400 },
         { msg: 'ERC1155: insufficient balance for transfer', status: 400 },
+        { msg: 'ERC1155: caller is not owner nor approved', status: 400 },
     ];
 
     const resMsg = errorMsgs.find(msg => errMessage.includes(msg.msg) || errMessage == msg.msg)
