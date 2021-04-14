@@ -23,9 +23,9 @@ export const createNFT = async (nft: Nft): Promise<any> => {
     return await nftContract.methods.createNftCard(...nftData, account, nft.editions, 1).send({ from: account, gas: "1000000" });
 }
 
-export const transferNFT = async (network: string, from: string, to: string, nftID: number): Promise<any> => {
+export const transferNFT = async (network: string, to: string, nftID: number): Promise<any> => {
     const [account, nftContract]: any[] = await getContract(network);
-    return await nftContract.methods.transfer(from, to, nftID, 1).send({ from });
+    return await nftContract.methods.transfer(account, to, nftID, 1).send({ from: account });
 }
 
 export const migrateNFT = async (fromNetwork: string, toNetwork: string, nftID: number): Promise<any> => {

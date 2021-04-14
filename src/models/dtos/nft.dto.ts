@@ -71,10 +71,6 @@ export class TransferNftDto {
 
     @ApiProperty()
     @IsNotEmpty()
-    readonly from: string;
-
-    @ApiProperty()
-    @IsNotEmpty()
     readonly destination: string;
 }
 

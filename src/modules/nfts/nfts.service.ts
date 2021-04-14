@@ -60,7 +60,7 @@ export class NftsService {
   async transferNft(nft: TransferNft): Promise<ResponseData> {
     try {
       // transfer nft 
-      const nftRes = await transferNFT(nft.network, nft.from, nft.destination, nft.tokenid);
+      const nftRes = await transferNFT(nft.network, nft.destination, nft.tokenid);
       const chainNft = await getNFT(nft.tokenid)
 
       if (!chainNft || !chainNft.name)
