@@ -19,8 +19,10 @@ services:
     container_name: trotter
     environment:
       - MONGODB_URL="mongodb://mongo/trotternfts?readPreference=primary&appname=MongoDB%20Compass&ssl=false"
-      - MNEMONIC=""
-      - TROTTER_NODE_ENV="prod"
+      - MNEMONIC="input engage salon smooth choose buffalo priority february advice crop visit stand"
+      - TROTTER_NODE_ENV="develop"
+    #  - ADMIN_USERNAME=""
+    #  - ADMIN_PASSWORD=""
     ports:
       - 3000:3000
     depends_on:
