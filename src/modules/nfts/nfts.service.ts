@@ -17,7 +17,7 @@ export class NftsService {
       if (!chainNft || !chainNft.name)
         return response({}, 'Nft metadata not found!!', false);
 
-      return response(chainNft, '', true);
+      return response(chainNft, 'Nft found', true);
     } catch (error) {
       return nftResponse(error.message);
     }

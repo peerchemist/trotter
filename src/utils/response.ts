@@ -13,6 +13,7 @@ export const response = (data: object, message: string, success?: boolean, trans
 export const structNftResponse = (nft: any, network?: string) => {
     return {
         network,
+        contractAddress: network && nft['contractAddress'],
         nftID: nft['nftID'],
         name: nft['name'],
         ipfsHash: nft['ipfsHash'],
