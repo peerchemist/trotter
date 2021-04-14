@@ -40,8 +40,10 @@ export const fetchNFTs = async (): Promise<any> => {
     const nfts = [];
     const maxs = [];
     const circulatings = [];
+    const balances = [];
 
     for (let i = 0; i < cards; i++) {
+        balances.push(nftContract.methods.balanceOf(account, i + 1).call());
         nfts.push(nftContract.methods.nfts(i).call({ from: account }));
         maxs.push(nftContract.methods.totalSupply(i + 1).call());
         circulatings.push(nftContract.methods.circulatingSupply(i + 1).call());
@@ -50,9 +52,11 @@ export const fetchNFTs = async (): Promise<any> => {
     const resMaxs = await Promise.all(maxs);
     const resCirculatings = await Promise.all(circulatings);
     const resNfts = await Promise.all(nfts);
+    const resBalances = await Promise.all(balances);
 
     return resNfts.map((nft, index) => {
-        const newObj = { ...nft, editions: resMaxs[index], circulatingSupply: resCirculatings[index], contractAddress };
+        const adminBalance = resBalances[index] > 0 ? resBalances[index] : undefined;
+        const newObj = { ...nft, editions: resMaxs[index], circulatingSupply: resCirculatings[index], contractAddress, balance: adminBalance };
         return structNftResponse(newObj, network);
     });
 }
