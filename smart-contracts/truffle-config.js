@@ -20,7 +20,7 @@ module.exports = {
             provider: () =>
                 new HDWalletProvider(
                     mnemonic,
-                    `https://data-seed-prebsc-1-s1.binance.org:8545`
+                    process.env['API_BSC_TESTNET']
                 ),
             network_id: 97,
             confirmations: 10,
@@ -31,7 +31,7 @@ module.exports = {
             provider: () =>
                 new HDWalletProvider(
                     mnemonic,
-                    `https://bsc-dataseed.binance.org`
+                    process.env['API_BSC_MAINNET']
                 ),
             network_id: 56,
             // confirmations: 10,
@@ -44,7 +44,7 @@ module.exports = {
             provider: () =>
                 new HDWalletProvider(
                     mnemonic,
-                    `https://rpc-mumbai.maticvigil.com`
+                    process.env['API_MATIC_TESTNET']
                 ),
                 network_id: 80001,
                 skipDryRun: true,
@@ -54,7 +54,7 @@ module.exports = {
             provider: () =>
                 new HDWalletProvider(
                     mnemonic,
-                    `https://rinkeby.infura.io/v3/${process.env.rinkedbyKey}`
+                    process.env['API_ETH_TESTNET']
                 ),
             network_id: 4,
             skipDryRun: true,
