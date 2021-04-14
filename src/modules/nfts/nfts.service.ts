@@ -19,6 +19,9 @@ export class NftsService {
 
       return response(chainNft, 'Nft found', true);
     } catch (error) {
+      if (error.message.includes("execution reverted"))
+        return response({}, 'Nft not found!!', false);
+      
       return nftResponse(error.message);
     }
   }
@@ -118,7 +121,7 @@ export class NftsService {
       const mintRes = await mintNFT(data.network, id, data.toAddress, data.amount);
       
       if (mintRes.length < 1)
-      return response([], 'Nft not found', false);
+        return response([], 'Nft not found', false);
       
       return response({}, 'Nfts mint successfully', true, mintRes.transactionHash);
     } catch (error) {
