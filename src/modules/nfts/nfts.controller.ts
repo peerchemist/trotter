@@ -1,6 +1,6 @@
 import { Controller, Body, Get, Param, Post, UseInterceptors, UploadedFile, ParseIntPipe } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateNftDto, MigrateNftDto, MintNftDto, TransferNftDto } from '../../models/dtos/nft.dto';
 import { ResponseData } from '../../models/interfaces/nft.interface';
 import { NftsService } from './nfts.service';
@@ -9,6 +9,10 @@ import { NftsService } from './nfts.service';
 export class NftsController {
   constructor(private readonly nftsService: NftsService) { }
 
+  @ApiOperation({
+    summary: 'create a NFT token',
+    description: 'Create NFT token on a $BLOCKCHAIN by passing required metadata'
+  })
   @ApiTags('admin')
   @Post('create')
   @ApiConsumes('multipart/form-data')
@@ -24,6 +28,10 @@ export class NftsController {
     return this.nftsService.create(createNftDto, file.buffer);
   }
 
+  @ApiOperation({
+    summary: '',
+    description: ''
+  })
   @ApiTags('admin')
   @Get('token/:tokenId')
   @ApiResponse({ status: 201, description: 'token items.'})
@@ -35,39 +43,67 @@ export class NftsController {
     return this.nftsService.findOne(id);
   }
 
+  @ApiOperation({
+    summary: '',
+    description: ''
+  })
   @ApiTags('admin')
   @Post('transfer')
   transfer(@Body() transferNftDto: TransferNftDto): Promise<ResponseData> {
     return this.nftsService.transferNft(transferNftDto);
   }
 
+  @ApiOperation({
+    summary: '',
+    description: ''
+  })
   @ApiTags('admin')
   @Post('token/:tokenId/migrate')
   migrate(@Body() migrateNftDto: MigrateNftDto): Promise<ResponseData> {
     return this.nftsService.migrateNft(migrateNftDto);
   }
 
+  @ApiOperation({
+    summary: '',
+    description: ''
+  })
   @ApiTags('admin')
   @Get('list')
   findAll(): Promise<ResponseData> {
     return this.nftsService.findAll();
   }
 
+  @ApiOperation({
+    summary: '',
+    description: ''
+  })
   @Get('/balance/:tokenId/:address')
   checkBalance(@Param('tokenId', ParseIntPipe) id: number, @Param('address') address: string): Promise<ResponseData> {
     return this.nftsService.checkBalance(id, address);
   }
 
+  @ApiOperation({
+    summary: '',
+    description: ''
+  })
   @Get('/token/:tokenId/owners')
   findTokenOwners(@Param('tokenId', ParseIntPipe) id: number): Promise<ResponseData> {
     return this.nftsService.fetchTokenHolders(id);
   }
 
+  @ApiOperation({
+    summary: '',
+    description: ''
+  })
   @Get('/token/:tokenId/editions')
   findTokenEditions(@Param('tokenId', ParseIntPipe) id: number): Promise<ResponseData> {
     return this.nftsService.fetchTokenEditions(id);
   }
 
+  @ApiOperation({
+    summary: '',
+    description: ''
+  })
   @Post('/token/:tokenId/mint')
   mintNewToken(@Body() mintNftDto: MintNftDto, @Param('tokenId', ParseIntPipe) id: number): Promise<ResponseData> {
     return this.nftsService.mintNewToken(id, mintNftDto);
