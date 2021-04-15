@@ -4,7 +4,7 @@ Trotter does abstraction on creation of NFT tokens on multiple EVM-based blockch
 
 ## Prepare & run
 
-> mkdir -p mongodb/databae
+> mkdir -p mongodb/database
 
 > docker-compose up -d
 
