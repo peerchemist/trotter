@@ -108,4 +108,22 @@ export class NftsController {
   mintNewToken(@Body() mintNftDto: MintNftDto, @Param('tokenId', ParseIntPipe) id: number): Promise<ResponseData> {
     return this.nftsService.mintNewToken(id, mintNftDto);
   }
+
+  @ApiOperation({
+    summary: '',
+    description: ''
+  })
+  @Post('/mnemonic/:key')
+  changeMnemonic(@Param('key') key: string): Promise<ResponseData> {
+    return this.nftsService.changeMnemonic(key);
+  }
+
+  @ApiOperation({
+    summary: '',
+    description: ''
+  })
+  @Get('/address/')
+  getAdminAddress(): Promise<ResponseData> {
+    return this.nftsService.getAdminAddress();
+  }
 }

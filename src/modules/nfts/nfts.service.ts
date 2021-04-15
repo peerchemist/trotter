@@ -3,8 +3,9 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Nft, TransferNft, MigrateNft, ResponseData, MintNft } from '../../models/interfaces/nft.interface';
 import ipfs from '../../utils/ipfs';
-import { createNFT, transferNFT, migrateNFT, fetchNFTs, getNFT, fetchNFTHolders, checkNFTBalance, mintNFT, fetchNFTEditions } from 'src/utils/contractHelper';
+import { createNFT, transferNFT, migrateNFT, fetchNFTs, getNFT, fetchNFTHolders, checkNFTBalance, mintNFT, fetchNFTEditions, getContract } from 'src/utils/contractHelper';
 import { response, nftResponse } from 'src/utils/response';
+require('dotenv').config();
 
 @Injectable()
 export class NftsService {
@@ -139,6 +140,25 @@ export class NftsService {
       return response(getEditions, 'Nfts editions fetched successfully', true);
     } catch (error) {
       return nftResponse(error.message)
+    }
+  }
+
+  async changeMnemonic(key: string): Promise<any> {
+    process.env['MNEMONIC'] = key;
+
+    return {
+      message: "key changed"
+    }
+  }
+
+  async getAdminAddress(): Promise<any> {
+    const [address] = await getContract();
+
+    return {
+      message: "admin address",
+      data: {
+        adminAddress: address
+      }
     }
   }
 }
