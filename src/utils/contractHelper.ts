@@ -5,7 +5,7 @@ import { Nft } from 'src/models/interfaces/nft.interface';
 import { structNftResponse } from './response';
 
 export const getContract = async (network?: string): Promise<any[]> => {
-    const usenetwork = network && contracts.trotterNft[network] && process.env[network] ? network : 'API_BSC_MAINNET';
+    const usenetwork = network && contracts.trotterNft[network] && process.env[network] ? network : process.env['API_DEFAULT_NETWORK'];
     console.log({usenetwork});
     
     const web3 = Web3(usenetwork)
