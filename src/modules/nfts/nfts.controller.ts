@@ -33,6 +33,16 @@ export class NftsController {
     description: ''
   })
   @ApiTags('admin')
+  @Post('/token/:tokenId/mint')
+  mintNewToken(@Body() mintNftDto: MintNftDto, @Param('tokenId', ParseIntPipe) id: number): Promise<ResponseData> {
+    return this.nftsService.mintNewToken(id, mintNftDto);
+  }
+
+  @ApiOperation({
+    summary: '',
+    description: ''
+  })
+  @ApiTags('admin')
   @Get('token/:tokenId')
   @ApiResponse({ status: 201, description: 'token items.'})
   @ApiResponse({ status: 404, description: 'token not found.'})
@@ -48,9 +58,9 @@ export class NftsController {
     description: ''
   })
   @ApiTags('admin')
-  @Post('transfer')
-  transfer(@Body() transferNftDto: TransferNftDto): Promise<ResponseData> {
-    return this.nftsService.transferNft(transferNftDto);
+  @Post('transfer/:tokenId')
+  transfer(@Body() transferNftDto: TransferNftDto, @Param('tokenId', ParseIntPipe) id: number): Promise<ResponseData> {
+    return this.nftsService.transferNft(transferNftDto, id);
   }
 
   @ApiOperation({
@@ -98,15 +108,6 @@ export class NftsController {
   @Get('/token/:tokenId/editions')
   findTokenEditions(@Param('tokenId', ParseIntPipe) id: number): Promise<ResponseData> {
     return this.nftsService.fetchTokenEditions(id);
-  }
-
-  @ApiOperation({
-    summary: '',
-    description: ''
-  })
-  @Post('/token/:tokenId/mint')
-  mintNewToken(@Body() mintNftDto: MintNftDto, @Param('tokenId', ParseIntPipe) id: number): Promise<ResponseData> {
-    return this.nftsService.mintNewToken(id, mintNftDto);
   }
 
   @ApiOperation({

@@ -58,11 +58,11 @@ export class NftsService {
     }
   }
 
-  async transferNft(nft: TransferNft): Promise<ResponseData> {
+  async transferNft(nft: TransferNft, id: number): Promise<ResponseData> {
     try {
       // transfer nft 
-      const nftRes = await transferNFT(nft.network, nft.destination, nft.tokenid);
-      const chainNft = await getNFT(nft.tokenid)
+      const nftRes = await transferNFT(nft.network, nft.destination, id);
+      const chainNft = await getNFT(id)
 
       if (!chainNft || !chainNft.name)
         return response({}, 'Nft metadata not found!!', false);

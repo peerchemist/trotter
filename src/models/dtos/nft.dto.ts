@@ -63,10 +63,6 @@ export class TransferNftDto {
 
     @ApiProperty()
     @IsNotEmpty()
-    readonly tokenid: number;
-
-    @ApiProperty()
-    @IsNotEmpty()
     readonly fee: number;
 
     @ApiProperty()

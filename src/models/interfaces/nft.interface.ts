@@ -16,7 +16,6 @@ export interface Nft {
 
 export interface TransferNft {
     network: string,
-    tokenid: number,
     fee: number,
     destination: string,
 }
