@@ -152,12 +152,13 @@ export class NftsService {
   }
 
   async getAdminAddress(): Promise<any> {
-    const [address] = await getContract();
+    const [address, {}, network] = await getContract();
 
     return {
       message: "admin address",
       data: {
-        adminAddress: address
+        network,
+        adminAddress: address,
       }
     }
   }
