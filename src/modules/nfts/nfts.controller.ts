@@ -10,8 +10,8 @@ export class NftsController {
   constructor(private readonly nftsService: NftsService) { }
 
   @ApiOperation({
-    summary: 'create a NFT token',
-    description: 'Create NFT token on a $BLOCKCHAIN by passing required metadata'
+    summary: 'Create a NFT token',
+    description: 'Create NFT token on a blockchain of choice by passing required metadata. In answer there is going to be the txid.'
   })
   @ApiTags('admin')
   @Post('create')
@@ -29,7 +29,7 @@ export class NftsController {
   }
 
   @ApiOperation({
-    summary: '',
+    summary: 'Get detail information about NFT token.',
     description: ''
   })
   @ApiTags('admin')
@@ -54,7 +54,7 @@ export class NftsController {
   }
 
   @ApiOperation({
-    summary: '',
+    summary: 'Transfer NFT token to another address.',
     description: ''
   })
   @ApiTags('admin')
@@ -64,8 +64,8 @@ export class NftsController {
   }
 
   @ApiOperation({
-    summary: '',
-    description: ''
+    summary: 'Migrate NFT token to another network.',
+    description: 'At the moment only transfer between Ethereum and Matic networks are supported.'
   })
   @ApiTags('admin')
   @Post('token/:tokenId/migrate')
@@ -74,7 +74,7 @@ export class NftsController {
   }
 
   @ApiOperation({
-    summary: '',
+    summary: 'List all issued NFT token.',
     description: ''
   })
   @ApiTags('admin')
@@ -84,7 +84,7 @@ export class NftsController {
   }
 
   @ApiOperation({
-    summary: '',
+    summary: 'Get token balance of {address}.',
     description: ''
   })
   @Get('/balance/:tokenId/:address')
@@ -93,7 +93,7 @@ export class NftsController {
   }
 
   @ApiOperation({
-    summary: '',
+    summary: 'Get list of current owners of this NFT.',
     description: ''
   })
   @Get('/token/:tokenId/owners')
@@ -102,7 +102,7 @@ export class NftsController {
   }
 
   @ApiOperation({
-    summary: '',
+    summary: 'List currently issued editions of a NFT.',
     description: ''
   })
   @Get('/token/:tokenId/editions')
@@ -111,7 +111,7 @@ export class NftsController {
   }
 
   @ApiOperation({
-    summary: '',
+    summary: 'Mint new edition of NFT.',
     description: ''
   })
   @Post('/mnemonic/:key')
@@ -120,7 +120,7 @@ export class NftsController {
   }
 
   @ApiOperation({
-    summary: '',
+    summary: 'Get address of currently set privatekey/mnemonic.',
     description: ''
   })
   @Get('/address/')
