@@ -29,7 +29,7 @@ export class NftsController {
   }
 
   @ApiOperation({
-    summary: 'Get detail information about NFT token.',
+    summary: 'Mint new edition of NFT.',
     description: ''
   })
   @ApiTags('admin')
@@ -39,7 +39,7 @@ export class NftsController {
   }
 
   @ApiOperation({
-    summary: '',
+    summary: 'Get detail information about NFT token.',
     description: ''
   })
   @ApiTags('admin')
@@ -111,7 +111,7 @@ export class NftsController {
   }
 
   @ApiOperation({
-    summary: 'Mint new edition of NFT.',
+    summary: '',
     description: ''
   })
   @Post('/mnemonic/:key')
