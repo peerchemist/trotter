@@ -5,6 +5,7 @@ import { Nft, TransferNft, MigrateNft, ResponseData, MintNft } from '../../model
 import ipfs from '../../utils/ipfs';
 import { createNFT, transferNFT, migrateNFT, fetchNFTs, getNFT, fetchNFTHolders, checkNFTBalance, mintNFT, fetchNFTEditions, getContract } from 'src/utils/contractHelper';
 import { response, nftResponse } from 'src/utils/response';
+import config from 'src/config/config';
 require('dotenv').config();
 
 @Injectable()
@@ -29,12 +30,19 @@ export class NftsService {
 
   async findAll(): Promise<ResponseData> {
     try {
-      const chainNfts = await fetchNFTs();
+      let arr = [];
 
-      if (chainNfts.length < 1)
+      for (let i = 0; i < config.listNetworks.length; i++) {
+        console.log(config.listNetworks[i]);
+        
+        const chainNfts = await fetchNFTs(config.listNetworks[i]);
+        arr = arr.concat(chainNfts);
+      }
+
+      if (arr.length < 1)
         return response([], 'No nfts created yet!!', false);
 
-      return response(chainNfts, 'Nfts fetched successfully', true);
+      return response(arr, 'Nfts fetched successfully', true);
     } catch (error) {
       return nftResponse(error.message)
     }

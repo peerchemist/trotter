@@ -14,5 +14,13 @@ export default {
         ETH_TESTNET: process.env['API_ETH_TESTNET'],
         BSC_TESTNET: process.env['API_BSC_TESTNET'],
         DEFAULT_NETWORK: process.env['API_DEFAULT_NETWORK'],
-    }
+    },
+    listNetworks: [
+        // 'MATIC_MAINNET',
+        // 'ETH_MAINNET',
+        'BSC_MAINNET',
+        'MATIC_TESTNET',
+        'ETH_TESTNET',
+        'BSC_TESTNET'
+    ]
 }
