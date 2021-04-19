@@ -6,7 +6,7 @@ const provider = (network: string) => new HDWalletProvider({
     mnemonic: {
         phrase: config.wallet
     },
-    providerOrUrl: process.env[network]
+    providerOrUrl: config.networks[network]
 });
 
 const web3 = (network: string) => new Web3(provider(network));
