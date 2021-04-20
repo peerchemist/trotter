@@ -1,7 +1,7 @@
 export default {
     trotterNft: {
         // MAINNETs
-        MATIC_MAINNET: "",
+        MATIC_MAINNET: "0x5e51eDf5E73bf1089144f80f9579220F7172fCf9",
         ETH_MAINNET: "",
         BSC_MAINNET: "0xa94985F57DE1A2A9a6e269E07c79f73De2590c22",
 
