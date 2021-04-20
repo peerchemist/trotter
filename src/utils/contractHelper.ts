@@ -10,20 +10,21 @@ export const getContract = async (network?: string): Promise<any[]> => {
     console.log({usenetwork});
     
     const web3 = Web3(usenetwork)
+    const gasPrice = await web3.eth.getGasPrice()
     const accounts: string[] = await web3.eth.getAccounts();
     const nonce = await web3.eth.getTransactionCount(accounts[0])
     const contractAddress = contracts.trotterNft[usenetwork];
     const nftContract: any = new web3.eth.Contract(trotterNftAbi, contractAddress);
     // get transaction count for this wallet
     
-    return [accounts[0], nftContract, usenetwork, contractAddress, nonce];
+    return [accounts[0], nftContract, usenetwork, contractAddress, nonce, gasPrice];
 }
 
 export const createNFT = async (nft: Nft): Promise<any> => {
-    const [account, nftContract, , , nonce]: any[] = await getContract(nft.network);
+    const [account, nftContract, , , nonce, gasPrice]: any[] = await getContract(nft.network);
     // const nftData = { name: nft.name, ipfsHash: nft.ipfsHash, price: nft.price, author: nft.author, about: nft.about, properties: JSON.stringify(nft.properties || ''), statement: JSON.stringify(nft.statement || '') };
     const nftData = [nft.name, nft.ipfsHash, nft.price, nft.author, nft.about, JSON.stringify(nft.properties || ''), JSON.stringify(nft.statement || '')];    
-    return await nftContract.methods.createNftCard(...nftData, account, nft.editions, 1).send({ from: account, gas: "1000000", nonce });
+    return await nftContract.methods.createNftCard(...nftData, account, nft.editions, 1).send({ from: account, gasPrice, nonce });
 }
 
 export const transferNFT = async (network: string, to: string, nftID: number): Promise<any> => {
