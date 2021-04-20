@@ -16,7 +16,7 @@ export default {
         DEFAULT_NETWORK: process.env['API_DEFAULT_NETWORK'],
     },
     listNetworks: [
-        // 'MATIC_MAINNET',
+        'MATIC_MAINNET',
         // 'ETH_MAINNET',
         'BSC_MAINNET',
         'MATIC_TESTNET',
