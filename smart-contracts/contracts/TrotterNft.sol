@@ -5,10 +5,10 @@ import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
-contract TrotterNft is ERC1155, AccessControl {
+contract TrotterNft is AccessControl, ERC1155("https://www.trotter.finance/api/NFTs/") {
     using SafeMath for uint256;
 
-    constructor() ERC1155("https://www.trotter.finance/api/NFTs/") {
+    function initialize() public {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
     }
 
@@ -38,19 +38,10 @@ contract TrotterNft is ERC1155, AccessControl {
     mapping(uint256 => uint256) public circulatingSupply;
     // nftid ==> edition id ==> owner
     mapping(uint256 => mapping(uint256 => address)) public editions;
+    // nftid ==> edition count
+    mapping(uint256 => uint256) public totalEditions; 
 
     event CardAdded(uint256 id, uint256 maxSupply);
-
-    /**
-    * @dev Require msg.sender to own editions
-    */
-    modifier ownEditions(uint256 nftId, uint256[] memory _editions) {
-        for (uint256 index = 1; index < _editions.length; index++) {
-            string memory _res = string(abi.encodePacked("ERC1155#notEditionOwner: you do not own this edition", _editions[index]));
-            require(editions[nftId][_editions[index]] != msg.sender, _res);
-        }
-        _;
-    }
 
     /**
      * @notice Creates nft card and mints a new NFT for first time.
@@ -141,10 +132,10 @@ contract TrotterNft is ERC1155, AccessControl {
         _mint(_to, _id, _amount, "");
         nftOwners[_id].push(_to);
 
+        circulatingSupply[_id] = circulatingSupply[_id].add(_amount);
         // create editions
         for (uint256 index = 1; index <= _amount; index++) {
-            circulatingSupply[_id] = circulatingSupply[_id].add(1);
-            editions[_id][circulatingSupply[_id]] = _to;
+            editions[_id][totalEditions[_id].add(1)] = _to;
         }
     }
 
@@ -152,26 +143,21 @@ contract TrotterNft is ERC1155, AccessControl {
      * @notice Burn an NFT from NFT card.
      *
      * @param _id The card id to burn NFT from.
-     * @param _editions The editions of NFT to burn from this card.
+     * @param _amount The amount of editions of NFT to burn from this card.
      */
-    function burn(uint256 _id, uint256[] memory _editions) public ownEditions(_id, _editions) {
+    function burn(uint256 _id, uint256 _amount) public {
         address sender = _msgSender();
-        _burn(sender, _id, _editions.length);
+        _burn(sender, _id, _amount);
 
-        delete getNft[_id];
         for (uint256 index = 0; index < nfts.length; index++) {
             if(nftOwners[_id][index] == sender) {
-                nftOwners[_id][index] = nftOwners[_id][nftOwners[_id].length];
+                nftOwners[_id][index] = nftOwners[_id][nftOwners[_id].length - 1];
                 nftOwners[_id].pop();
                 break;
             }
         }
 
-        // delete editions
-        for (uint256 index = 1; index <= _editions.length; index++) {
-            delete editions[_id][_editions[index]];
-            circulatingSupply[_id] = circulatingSupply[_id].sub(1);
-        }
+        circulatingSupply[_id] = circulatingSupply[_id].sub(_amount);
     }
 
     /**
@@ -180,10 +166,10 @@ contract TrotterNft is ERC1155, AccessControl {
      * @param _from The sender address.
      * @param _to The receiver address.
      * @param _id The card id to burn NFT from.
-     * @param _editions The editions of NFT to transfer.
+     * @param _amount The editions of NFT to transfer.
      */
-    function transfer(address _from, address _to, uint256 _id, uint256[] memory _editions) public ownEditions(_id, _editions) {
-        safeTransferFrom(_from, _to, _id, _editions.length, "");
+    function transfer(address _from, address _to, uint256 _id, uint256 _amount) public {
+        safeTransferFrom(_from, _to, _id, _amount, "");
         
         for (uint256 index = 0; index < nfts.length; index++) {
             if(nftOwners[_id][index] == _from) {
@@ -192,9 +178,9 @@ contract TrotterNft is ERC1155, AccessControl {
             }
         }
 
-        // move editions
-        for (uint256 index = 1; index <= _editions.length; index++) {
-            editions[_id][_editions[index]] = _to;
+        // create editions
+        for (uint256 index = 1; index <= _amount; index++) {
+            editions[_id][totalEditions[_id].add(1)] = _to;
         }
     }
 

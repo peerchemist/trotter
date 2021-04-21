@@ -2,13 +2,6 @@ const TrotterNFT = artifacts.require('TrotterNFT');
 const truffleAssert = require('truffle-assertions');
 
 contract('TrotterNFT', async (accounts) => {
-  it('Returns correct Metadata', async () => {
-    const instance = await TrotterNFT.deployed();
-    const contractMetadata = await instance.contractURI.call();
-
-    assert.equal(contractMetadata, 'https://www.trotter.finance/api/NFTs/');
-  });
-
   it('Sets minter', async () => {
     const instance = await TrotterNFT.deployed();
     const minterRole = await instance.MINTER_ROLE.call();
@@ -32,22 +25,28 @@ contract('TrotterNFT', async (accounts) => {
 
   it('Cannot mint more than max supply', async () => {
     const instance = await TrotterNFT.deployed();
-    await instance.addCard(5, { from: accounts[1] });
-    const cardID = await instance.cards.call();
-    await instance.mint(accounts[2], cardID.toNumber(), 3, {
+    const newCard = await instance.createNftCard('big nft', 'QmaZgH4KJT2xZxxPETuUnBvn3aDnEUgjUNwftfA4gk3RSG', 001, 'Chris', 'new', '', '',
+    accounts[2],
+    5,
+    1,
+    { from: accounts[1] },
+    );
+    
+    const cardID = newCard.receipt.logs[0].args.id.toString();
+    await instance.mint(accounts[2], cardID, 2, {
       from: accounts[1],
     });
     await truffleAssert.reverts(
-      instance.mint(accounts[2], cardID.toNumber(), 3, { from: accounts[1] }),
+      instance.mint(accounts[2], cardID, 3, { from: accounts[1] }),
     );
     await truffleAssert.reverts(
-      instance.mint(accounts[2], cardID.toNumber(), 1, { from: accounts[2] }),
+      instance.mint(accounts[2], cardID, 1, { from: accounts[2] }),
     );
-    await instance.mint(accounts[2], cardID.toNumber(), 2, {
+    await instance.mint(accounts[2], cardID, 2, {
       from: accounts[1],
     });
     await truffleAssert.reverts(
-      instance.mint(accounts[2], cardID.toNumber(), 1, { from: accounts[1] }),
+      instance.mint(accounts[2], cardID, 1, { from: accounts[1] }),
     );
   });
 
