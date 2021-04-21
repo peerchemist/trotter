@@ -14,6 +14,11 @@ contract TrotterNft is ERC1155, AccessControl {
 
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
+    // Contract name
+    string public name = "Finite";
+    // Contract symbol
+    string public symbol = "FNT";
+
     struct nftMetadata {
         uint256 nftID;
         string name;
@@ -31,62 +36,66 @@ contract TrotterNft is ERC1155, AccessControl {
     mapping(uint256 => address[]) public nftOwners;
     mapping(uint256 => uint256) public totalSupply;
     mapping(uint256 => uint256) public circulatingSupply;
-    // nftid ==> owner ==> editions
-    mapping(uint256 => mapping(address => uint256[])) public editions;
+    // nftid ==> edition id ==> owner
+    mapping(uint256 => mapping(uint256 => address)) public editions;
 
     event CardAdded(uint256 id, uint256 maxSupply);
 
     /**
-     * @dev Get contract URL
-     */
-    function contractURI() public view returns (string memory) {
-        return string(uri(0));
+    * @dev Require msg.sender to own editions
+    */
+    modifier ownEditions(uint256 nftId, uint256[] memory _editions) {
+        for (uint256 index = 1; index < _editions.length; index++) {
+            string memory _res = string(abi.encodePacked("ERC1155#notEditionOwner: you do not own this edition", _editions[index]));
+            require(editions[nftId][_editions[index]] != msg.sender, _res);
+        }
+        _;
     }
 
     /**
      * @notice Creates nft card and mints a new NFT for first time.
      *
-     * @param name Name of nft
-     * @param ipfsHash Ipfs Hash of nft media
-     * @param price Price of nft (in eth)
-     * @param author Author of nft
-     * @param about More details about nft
-     * @param properties Properties details about nft
-     * @param statement Any statement details about nft
-     * @param newOwner Address to mint NFT to.
-     * @param maxSupply The max supply of NFT mintable.
-     * @param initialSupply The amount of NFT to mint initially.
+     * @param _name Name of nft
+     * @param _ipfsHash Ipfs Hash of nft media
+     * @param _price Price of nft (in eth)
+     * @param _author Author of nft
+     * @param _about More details about nft
+     * @param _properties Properties details about nft
+     * @param _statement Any statement details about nft
+     * @param _newOwner Address to mint NFT to.
+     * @param _maxSupply The max supply of NFT mintable.
+     * @param _initialSupply The amount of NFT to mint initially.
      */
     function createNftCard(
-        string memory name,
-        string memory ipfsHash,
-        uint256 price,
-        string memory author,
-        string memory about,
-        string memory properties,
-        string memory statement,
-        address newOwner,
-        uint256 maxSupply,
-        uint256 initialSupply
+        string memory _name,
+        string memory _ipfsHash,
+        uint256 _price,
+        string memory _author,
+        string memory _about,
+        string memory _properties,
+        string memory _statement,
+        address _newOwner,
+        uint256 _maxSupply,
+        uint256 _initialSupply
     ) public returns (uint256) {
-        require(initialSupply > 0, "Initial supply less than 1");
-        uint256 nftId = addCard(maxSupply);
+        require(_initialSupply > 0, "Initial supply less than 1");
+        uint256 nftId = addCard(_maxSupply);
 
         nftMetadata memory data = nftMetadata({
             nftID: nftId,
-            name: name,
-            ipfsHash: ipfsHash,
-            price: price,
-            author: author,
-            about: about,
-            properties: properties,
-            statement: statement
+            name: _name,
+            ipfsHash: _ipfsHash,
+            price: _price,
+            author: _author,
+            about: _about,
+            properties: _properties,
+            statement: _statement
         });
 
         nfts.push(data);
         getNft[nftId] = data;
 
-        mint(newOwner, nftId, initialSupply);
+        mint(_newOwner, nftId, _initialSupply);
         return nftId;
     }
 
@@ -100,96 +109,105 @@ contract TrotterNft is ERC1155, AccessControl {
      * The less amount an NFT can be minted determines the value,
      * Low amount of an NFT in circulation makes it rare and more expensive.
      *
-     * @param maxSupply The max supply of the NFTs on this card.
+     * @param _maxSupply The max supply of the NFTs on this card.
      */
-    function addCard(uint256 maxSupply) public returns (uint256) {
+    function addCard(uint256 _maxSupply) public returns (uint256) {
         require(hasRole(MINTER_ROLE, _msgSender()), "Caller is not a minter");
-        require(maxSupply > 0, "Maximum supply can not be 0");
+        require(_maxSupply > 0, "Maximum supply can not be 0");
         cards = cards.add(1);
-        totalSupply[cards] = maxSupply;
-        emit CardAdded(cards, maxSupply);
+        totalSupply[cards] = _maxSupply;
+        emit CardAdded(cards, _maxSupply);
         return cards;
     }
 
     /**
      * @notice Mints a new NFT to an NFT card.
      *
-     * @param to Address to receive the new minted NFT.
-     * @param id The card id to mint NFT from.
-     * @param amount The amount of NFT to mint on this card.
+     * @param _to Address to receive the new minted NFT.
+     * @param _id The card id to mint NFT from.
+     * @param _amount The amount of NFT to mint on this card.
      */
     function mint(
-        address to,
-        uint256 id,
-        uint256 amount
+        address _to,
+        uint256 _id,
+        uint256 _amount
     ) public {
         require(hasRole(MINTER_ROLE, _msgSender()), "Caller is not a minter");
         require(
-            circulatingSupply[id].add(amount) <= totalSupply[id],
+            circulatingSupply[_id].add(_amount) <= totalSupply[_id],
             "Total supply reached."
         );
 
-        _mint(to, id, amount, "");
-        nftOwners[id].push(to);
-        circulatingSupply[id] = circulatingSupply[id].add(amount);
+        _mint(_to, _id, _amount, "");
+        nftOwners[_id].push(_to);
 
         // create editions
-        for (uint256 index = 1; index <= amount; index++) {
-            editions[id][to].push(editions[id][to].length);
+        for (uint256 index = 1; index <= _amount; index++) {
+            circulatingSupply[_id] = circulatingSupply[_id].add(1);
+            editions[_id][circulatingSupply[_id]] = _to;
         }
     }
 
     /**
      * @notice Burn an NFT from NFT card.
      *
-     * @param id The card id to burn NFT from.
-     * @param amount The amount of NFT to burn from this card.
+     * @param _id The card id to burn NFT from.
+     * @param _editions The editions of NFT to burn from this card.
      */
-    function burn(uint256 id, uint256 amount) public {
+    function burn(uint256 _id, uint256[] memory _editions) public ownEditions(_id, _editions) {
         address sender = _msgSender();
-        _burn(sender, id, amount);
+        _burn(sender, _id, _editions.length);
 
-        delete getNft[id];
+        delete getNft[_id];
         for (uint256 index = 0; index < nfts.length; index++) {
-            if(nftOwners[id][index] == sender) {
-                delete nftOwners[id][index];
+            if(nftOwners[_id][index] == sender) {
+                nftOwners[_id][index] = nftOwners[_id][nftOwners[_id].length];
+                nftOwners[_id].pop();
                 break;
             }
         }
 
-        circulatingSupply[id] = circulatingSupply[id].sub(amount);
-        editions[id][sender].pop();
+        // delete editions
+        for (uint256 index = 1; index <= _editions.length; index++) {
+            delete editions[_id][_editions[index]];
+            circulatingSupply[_id] = circulatingSupply[_id].sub(1);
+        }
     }
 
     /**
      * @notice Transfer an NFT to different owner.
      *
-     * @param id The card id to burn NFT from.
-     * @param amount The amount of NFT to transfer.
+     * @param _from The sender address.
+     * @param _to The receiver address.
+     * @param _id The card id to burn NFT from.
+     * @param _editions The editions of NFT to transfer.
      */
-    function transfer(address from, address to, uint256 id, uint256 amount) public {
-        safeTransferFrom(from, to, id, amount, "");
+    function transfer(address _from, address _to, uint256 _id, uint256[] memory _editions) public ownEditions(_id, _editions) {
+        safeTransferFrom(_from, _to, _id, _editions.length, "");
         
         for (uint256 index = 0; index < nfts.length; index++) {
-            if(nftOwners[id][index] == from) {
-                delete nftOwners[id][index];
+            if(nftOwners[_id][index] == _from) {
+                nftOwners[_id][index] = _to;
                 break;
             }
         }
 
-        nftOwners[id].push(to);
+        // move editions
+        for (uint256 index = 1; index <= _editions.length; index++) {
+            editions[_id][_editions[index]] = _to;
+        }
     }
 
     /**
      * @dev ERC1155 and AccessControl include supportsInterface so we need to override both
      */
-    function supportsInterface(bytes4 interfaceId)
+    function supportsInterface(bytes4 _interfaceId)
         public
         view
         virtual
         override(ERC1155, AccessControl)
         returns (bool)
     {
-        return super.supportsInterface(interfaceId);
+        return super.supportsInterface(_interfaceId);
     }
 }
