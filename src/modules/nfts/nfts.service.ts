@@ -70,7 +70,7 @@ export class NftsService {
     try {
       // transfer nft 
       const nftRes = await transferNFT(nft.network, nft.destination, id);
-      const chainNft = await getNFT(id)
+      const chainNft = await getNFT(id, nft.network);
 
       if (!chainNft || !chainNft.name)
         return response({}, 'Nft metadata not found!!', false);

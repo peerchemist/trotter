@@ -31,6 +31,8 @@ contract TrotterNft is ERC1155, AccessControl {
     mapping(uint256 => address[]) public nftOwners;
     mapping(uint256 => uint256) public totalSupply;
     mapping(uint256 => uint256) public circulatingSupply;
+    // nftid ==> owner ==> editions
+    mapping(uint256 => mapping(address => uint256[])) public editions;
 
     event CardAdded(uint256 id, uint256 maxSupply);
 
@@ -130,6 +132,11 @@ contract TrotterNft is ERC1155, AccessControl {
         _mint(to, id, amount, "");
         nftOwners[id].push(to);
         circulatingSupply[id] = circulatingSupply[id].add(amount);
+
+        // create editions
+        for (uint256 index = 1; index <= amount; index++) {
+            editions[id][to].push(editions[id][to].length);
+        }
     }
 
     /**
@@ -151,6 +158,7 @@ contract TrotterNft is ERC1155, AccessControl {
         }
 
         circulatingSupply[id] = circulatingSupply[id].sub(amount);
+        editions[id][sender].pop();
     }
 
     /**

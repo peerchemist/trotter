@@ -93,8 +93,8 @@ export const fetchNFTHolders = async (id): Promise<any> => {
     return res;
 }
 
-export const getNFT = async (id: number): Promise<any> => {
-    const [account, nftContract, network, contractAddress]: any[] = await getContract();
+export const getNFT = async (id: number, useNetwork?: string): Promise<any> => {
+    const [account, nftContract, network, contractAddress]: any[] = await getContract(useNetwork);
     const res = await nftContract.methods.nfts(id - 1).call({ from: account });
     const nftObj = { ...res, contractAddress }
     return structNftResponse(nftObj, network);
