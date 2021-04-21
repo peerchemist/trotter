@@ -25,7 +25,7 @@ contract TrotterNft is AccessControl, ERC1155("https://www.trotter.finance/api/N
         string ipfsHash;
         uint256 price;
         string author;
-        string about;
+        string description;
         string properties;
         string statement;
     }
@@ -50,7 +50,7 @@ contract TrotterNft is AccessControl, ERC1155("https://www.trotter.finance/api/N
      * @param _ipfsHash Ipfs Hash of nft media
      * @param _price Price of nft (in eth)
      * @param _author Author of nft
-     * @param _about More details about nft
+     * @param _description More details description nft
      * @param _properties Properties details about nft
      * @param _statement Any statement details about nft
      * @param _newOwner Address to mint NFT to.
@@ -62,7 +62,7 @@ contract TrotterNft is AccessControl, ERC1155("https://www.trotter.finance/api/N
         string memory _ipfsHash,
         uint256 _price,
         string memory _author,
-        string memory _about,
+        string memory _description,
         string memory _properties,
         string memory _statement,
         address _newOwner,
@@ -78,7 +78,7 @@ contract TrotterNft is AccessControl, ERC1155("https://www.trotter.finance/api/N
             ipfsHash: _ipfsHash,
             price: _price,
             author: _author,
-            about: _about,
+            description: _description,
             properties: _properties,
             statement: _statement
         });
