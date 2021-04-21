@@ -34,15 +34,16 @@ export class NftsService {
 
       for (let i = 0; i < config.listNetworks.length; i++) {
         console.log(config.listNetworks[i]);
-        
-        const chainNfts = await fetchNFTs(config.listNetworks[i]);
-        arr = arr.concat(chainNfts);
+        arr.push(fetchNFTs(config.listNetworks[i]));
       }
 
-      if (arr.length < 1)
+      const resArr = [];
+      (await Promise.all(arr)).map(data => resArr.push(...data));
+
+      if (resArr.length < 1)
         return response([], 'No nfts created yet!!', false);
 
-      return response(arr, 'Nfts fetched successfully', true);
+      return response(resArr, 'Nfts fetched successfully', true);
     } catch (error) {
       return nftResponse(error.message)
     }
