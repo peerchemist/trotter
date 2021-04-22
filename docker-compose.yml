@@ -23,6 +23,7 @@ services:
       - TROTTER_NODE_ENV=develop
       - LIMIT=10
       - TTL=60
+      - IPFS_PINN=false
     #  - ADMIN_USERNAME=""
     #  - ADMIN_PASSWORD=""
       - API_MATIC_TESTNET=https://rpc-mumbai.maticvigil.com/

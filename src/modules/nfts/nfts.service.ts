@@ -52,7 +52,7 @@ export class NftsService {
   async create(nft: Nft, fileBuffer: Buffer): Promise<ResponseData> {
     try {
       const res = await ipfs.add(fileBuffer, {
-        pin: true
+        pin: config.ipfsPinn
       });
       nft.ipfsHash = res.path;
       // send to nft smart contract for mint

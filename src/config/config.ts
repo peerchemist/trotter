@@ -26,5 +26,6 @@ export default {
     throttler: {
         ttl: process.env['TTL'],
         limit: process.env['LIMIT'],
-    }
+    },
+    ipfsPinn: process.env['IPFS_PINN']
 }
