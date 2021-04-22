@@ -7,8 +7,8 @@ import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [NftsModule, MongooseModule.forRoot(config.mongoURI), ThrottlerModule.forRoot({
-    ttl: 60,
-    limit: 10
+    ttl: parseInt(config.throttler.ttl),
+    limit: parseInt(config.throttler.limit)
   })],
   providers: [
     {

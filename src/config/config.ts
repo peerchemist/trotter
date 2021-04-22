@@ -22,5 +22,9 @@ export default {
         'MATIC_TESTNET',
         'ETH_TESTNET',
         'BSC_TESTNET'
-    ]
+    ],
+    throttler: {
+        ttl: process.env['TTL'],
+        limit: process.env['LIMIT'],
+    }
 }
