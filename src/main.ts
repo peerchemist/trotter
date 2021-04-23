@@ -5,7 +5,9 @@ import { AppModule } from './app.module';
 import { auth } from './middleware/auth.middleware';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: ['error', 'warn', 'debug', 'log']
+  });
   
   const config = new DocumentBuilder()
   .setTitle('Trotter NFT API.')

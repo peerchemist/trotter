@@ -13,10 +13,10 @@ export const getContract = async (network?: string): Promise<any[]> => {
     const web3 = Web3(usenetwork)
     const gasPrice = await web3.eth.getGasPrice()
     const accounts: string[] = await web3.eth.getAccounts();
+    // get transaction count for this wallet
     const nonce = await web3.eth.getTransactionCount(accounts[0])
     const contractAddress = contracts.trotterNft[usenetwork];
     const nftContract: any = new web3.eth.Contract(trotterNftAbi, contractAddress);
-    // get transaction count for this wallet
     
     return [accounts[0], nftContract, usenetwork, contractAddress, nonce, gasPrice];
 }

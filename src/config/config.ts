@@ -20,8 +20,8 @@ export default {
         // 'ETH_MAINNET',
         'BSC_MAINNET',
         'MATIC_TESTNET',
+        'BSC_TESTNET',
         'ETH_TESTNET',
-        'BSC_TESTNET'
     ],
     throttler: {
         ttl: process.env['TTL'],
