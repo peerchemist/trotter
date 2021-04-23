@@ -6,6 +6,7 @@ import ipfs from '../../utils/ipfs';
 import { createNFT, transferNFT, migrateNFT, fetchNFTs, getNFT, fetchNFTHolders, checkNFTBalance, mintNFT, fetchNFTEditions, getContract } from 'src/utils/contractHelper';
 import { response, nftResponse } from 'src/utils/response';
 import config from 'src/config/config';
+const web3 = require('web3');
 require('dotenv').config();
 
 @Injectable()
@@ -180,6 +181,25 @@ export class NftsService {
         network,
         adminAddress: address,
       }
+    }
+  }
+
+  async getMetadata(id: string): Promise<any> {
+    try {
+      const nftId = id.replace(/^0+/, '');
+      const chainNft = await getNFT(parseInt(nftId));
+      if (!chainNft || !chainNft.name)
+        return response({}, 'Nft metadata not found!!', false);
+  
+      return {
+        name: chainNft.name,
+        description: chainNft.about || "Trotter Nft collectibles",
+        image: `https://ipfs.io/ipfs/${chainNft.ipfsHash}`,
+        external_url: ""
+      };
+    } catch (error) {
+      Logger.error(error);
+      return nftResponse(error.message)
     }
   }
 }

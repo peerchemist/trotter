@@ -127,4 +127,13 @@ export class NftsController {
   getAdminAddress(): Promise<ResponseData> {
     return this.nftsService.getAdminAddress();
   }
+
+  @ApiOperation({
+    summary: 'Get NFT metadata.',
+    description: ''
+  })
+  @Get('/api/nfts/:tokenId')
+  getMetadata(@Param('tokenId') id: string): Promise<ResponseData> {
+    return this.nftsService.getMetadata(id);
+  }
 }

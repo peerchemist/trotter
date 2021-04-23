@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
-contract TrotterNft is AccessControl, ERC1155("https://www.trotter.finance/api/NFTs/") {
+contract TrotterNft is AccessControl, ERC1155("http://162.55.50.41:3000/api/nfts/{id}") {
     using SafeMath for uint256;
 
     function initialize() public {
