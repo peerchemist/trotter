@@ -25,7 +25,7 @@ export const createNFT = async (nft: Nft): Promise<any> => {
     const [account, nftContract, , , nonce, gasPrice]: any[] = await getContract(nft.network);
     // const nftData = { name: nft.name, ipfsHash: nft.ipfsHash, price: nft.price, author: nft.author, about: nft.about, properties: JSON.stringify(nft.properties || ''), statement: JSON.stringify(nft.statement || '') };
     const nftData = [nft.name, nft.ipfsHash, nft.price, nft.author, nft.about, JSON.stringify(nft.properties || ''), JSON.stringify(nft.statement || '')];    
-    return await nftContract.methods.createNftCard(...nftData, account, nft.editions, 1).send({ from: account, gasPrice, nonce });
+    return await nftContract.methods.createNftCard(...nftData, account, nft.editions, 1).send({ from: account, gasPrice, gas: '1000000', nonce });
 }
 
 export const transferNFT = async (network: string, to: string, nftID: number): Promise<any> => {

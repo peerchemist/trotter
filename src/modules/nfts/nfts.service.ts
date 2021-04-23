@@ -31,7 +31,6 @@ export class NftsService {
 
   async findAll(): Promise<ResponseData> {
     try {
-      console.error('lolsszz')
       let arr = [];
 
       for (let i = 0; i < config.listNetworks.length; i++) {
