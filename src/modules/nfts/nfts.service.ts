@@ -186,8 +186,9 @@ export class NftsService {
 
   async getMetadata(id: string): Promise<any> {
     try {
-      const nftId = id.replace(/^0+/, '');
-      const chainNft = await getNFT(parseInt(nftId));
+      const filterId = id.replace(/^0+/, '').split('.')[0];
+      const nftId = filterId ? parseInt(filterId) - 1 : 0
+      const chainNft = await getNFT(nftId);
       if (!chainNft || !chainNft.name)
         return response({}, 'Nft metadata not found!!', false);
   
