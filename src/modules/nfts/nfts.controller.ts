@@ -111,15 +111,6 @@ export class NftsController {
   }
 
   @ApiOperation({
-    summary: '',
-    description: ''
-  })
-  @Post('/mnemonic/:key')
-  changeMnemonic(@Param('key') key: string): Promise<ResponseData> {
-    return this.nftsService.changeMnemonic(key);
-  }
-
-  @ApiOperation({
     summary: 'Get address of currently set privatekey/mnemonic.',
     description: ''
   })

@@ -164,14 +164,6 @@ export class NftsService {
     }
   }
 
-  async changeMnemonic(key: string): Promise<any> {
-    process.env['MNEMONIC'] = key;
-
-    return {
-      message: "key changed"
-    }
-  }
-
   async getAdminAddress(): Promise<any> {
     const [address, {}, network] = await getContract();
 
