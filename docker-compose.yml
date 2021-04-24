@@ -26,6 +26,7 @@ services:
       - IPFS_PINN=false
     #  - ADMIN_USERNAME=""
     #  - ADMIN_PASSWORD=""
+      ## Supported networks
       - API_MATIC_TESTNET=https://rpc-mumbai.maticvigil.com/
       - API_MATIC_MAINNET=https://rpc-mainnet.maticvigil.com/
       - API_ETH_TESTNET=https://rinkeby.infura.io/v3/f3f30b367c6c45c093d0a7c7bd7709fa
@@ -33,6 +34,13 @@ services:
       - API_BSC_TESTNET=https://data-seed-prebsc-1-s2.binance.org:8545
       - API_BSC_MAINNET=https://bsc-dataseed.binance.org
       - API_DEFAULT_NETWORK=API_MATIC_MAINNET
+      ## Contract addresses
+      - NFT_CONTRACT_MATIC_MAINNET="0xb8Ce1A790f250d8141cDc1DB212546E30186843E"
+      - NFT_CONTRACT_ETH_MAINNET=""
+      - NFT_CONTRACT_BSC_MAINNET="0x820308811825CdFd028E591A7C582d0Fc582395d"
+      - NFT_CONTRACT_MATIC_TESTNET="0xF17874BE1baBbE00fB31FcD05BF79bF3708acc3e"
+      - NFT_CONTRACT_ETH_TESTNET="0x3cBB1263bEBFbc056D76f5560393BBAe883f438d"
+      - NFT_CONTRACT_BSC_TESTNET="0xFeCe4Fc6D3F64a8f14ad061D0d30BAD422fDD452"
     ports:
       - 3000:3000
     depends_on:

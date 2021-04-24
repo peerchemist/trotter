@@ -15,6 +15,14 @@ export default {
         BSC_TESTNET: process.env['API_BSC_TESTNET'],
         DEFAULT_NETWORK: process.env['API_DEFAULT_NETWORK'],
     },
+    contracts: {
+        MATIC_MAINNET: process.env['NFT_CONTRACT_MATIC_MAINNET'],
+        ETH_MAINNET: process.env['NFT_CONTRACT_ETH_MAINNET'],
+        BSC_MAINNET: process.env['NFT_CONTRACT_BSC_MAINNET'],
+        MATIC_TESTNET: process.env['NFT_CONTRACT_MATIC_TESTNET'],
+        ETH_TESTNET: process.env['NFT_CONTRACT_ETH_TESTNET'],
+        BSC_TESTNET: process.env['NFT_CONTRACT_BSC_TESTNET'],
+    },
     listNetworks: [
         'MATIC_MAINNET',
         // 'ETH_MAINNET',

@@ -1,13 +1,13 @@
 import Web3 from 'src/utils/web3';
 import * as trotterNftAbi from '../config/abi/trotterNft.json';
-import contracts from 'src/config/contracts';
 import { Nft } from 'src/models/interfaces/nft.interface';
 import { structNftResponse } from './response';
 import config from '../config/config';
 
 export const getContract = async (network?: string): Promise<any[]> => {
     const defaultNetwork = config.networks.DEFAULT_NETWORK.replace('API_', '');
-    const usenetwork = network && contracts.trotterNft[network] && config.networks[network] ? network : defaultNetwork;
+    const contracts = config.contracts;
+    const usenetwork = network && contracts[network] && config.networks[network] ? network : defaultNetwork;
     console.log({usenetwork});
     
     const web3 = Web3(usenetwork)
@@ -15,7 +15,7 @@ export const getContract = async (network?: string): Promise<any[]> => {
     const accounts: string[] = await web3.eth.getAccounts();
     // get transaction count for this wallet
     const nonce = await web3.eth.getTransactionCount(accounts[0])
-    const contractAddress = contracts.trotterNft[usenetwork];
+    const contractAddress = contracts[usenetwork];
     const nftContract: any = new web3.eth.Contract(trotterNftAbi, contractAddress);
     
     return [accounts[0], nftContract, usenetwork, contractAddress, nonce, gasPrice];

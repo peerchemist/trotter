@@ -6,7 +6,6 @@ import ipfs from '../../utils/ipfs';
 import { createNFT, transferNFT, migrateNFT, fetchNFTs, getNFT, fetchNFTHolders, checkNFTBalance, mintNFT, fetchNFTEditions, getContract } from 'src/utils/contractHelper';
 import { response, nftResponse } from 'src/utils/response';
 import config from 'src/config/config';
-const web3 = require('web3');
 require('dotenv').config();
 
 @Injectable()
