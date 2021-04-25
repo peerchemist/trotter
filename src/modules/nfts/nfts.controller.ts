@@ -134,7 +134,7 @@ export class NftsController {
     summary: 'Get logs file',
     description: ''
   })
-  @Get('/api/logs')
+  @Get('/log')
   async getLogs(@Res() response: Response): Promise<any> {
     const filename = __dirname + '/../../../errors.log';
     const readStream = await fs.createReadStream(filename);
