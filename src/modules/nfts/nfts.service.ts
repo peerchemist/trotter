@@ -2,7 +2,7 @@ import { Injectable, Logger, Res } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Nft, TransferNft, MigrateNft, ResponseData, MintNft } from '../../models/interfaces/nft.interface';
-import ipfs from '../../utils/ipfs';
+import { ipfsAdd } from '../../utils/ipfs';
 import { createNFT, transferNFT, migrateNFT, fetchNFTs, getNFT, fetchNFTHolders, checkNFTBalance, mintNFT, fetchNFTEditions, getContract } from 'src/utils/contractHelper';
 import { response, nftResponse } from 'src/utils/response';
 import config from 'src/config/config';
@@ -55,9 +55,7 @@ export class NftsService {
 
   async create(nft: Nft, fileBuffer: Buffer): Promise<ResponseData> {
     try {
-      const res = await ipfs.add(fileBuffer, {
-        pin: config.ipfsPinn
-      });
+      const res = await ipfsAdd(fileBuffer);
       nft.ipfsHash = res.path;
       // send to nft smart contract for mint
       const nftRes = await createNFT(nft);

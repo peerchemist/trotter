@@ -1,4 +1,12 @@
+import config from 'src/config/config';
 const IpfsHttpClient = require('ipfs-http-client');
-const ipfs = IpfsHttpClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
+const { pin, host, port } = config.ipfs;
 
+const ipfs = IpfsHttpClient({ host, port, protocol: 'https' });
 export default ipfs;
+
+export const ipfsAdd = async (buffer: Buffer): Promise<any> => {
+    return ipfs.add(buffer, {
+        pin,
+    });
+}

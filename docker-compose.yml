@@ -41,6 +41,11 @@ services:
       - NFT_CONTRACT_MATIC_TESTNET="0xF17874BE1baBbE00fB31FcD05BF79bF3708acc3e"
       - NFT_CONTRACT_ETH_TESTNET="0x3cBB1263bEBFbc056D76f5560393BBAe883f438d"
       - NFT_CONTRACT_BSC_TESTNET="0xFeCe4Fc6D3F64a8f14ad061D0d30BAD422fDD452"
+      ## Ipfs config
+      - IPFS_PINN=false
+      - IPFS_HOST=ipfs.infura.io
+      - IPFS_PORT=5001
+
     ports:
       - 3000:3000
     depends_on:

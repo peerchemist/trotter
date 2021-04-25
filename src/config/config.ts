@@ -35,5 +35,9 @@ export default {
         ttl: process.env['TTL'],
         limit: process.env['LIMIT'],
     },
-    ipfsPinn: process.env['IPFS_PINN']
+    ipfs: {
+        pin: process.env['IPFS_PINN'],
+        host: process.env['IPFS_HOST'],
+        port: process.env['IPFS_PORT']
+    }
 }
