@@ -125,7 +125,7 @@ export class NftsController {
     summary: 'Get NFT metadata.',
     description: ''
   })
-  @Get('/api/nfts/:tokenId')
+  @Get('/nfts/:tokenId')
   getMetadata(@Param('tokenId') id: string): Promise<ResponseData> {
     return this.nftsService.getMetadata(id);
   }
