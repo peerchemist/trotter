@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Res } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Nft, TransferNft, MigrateNft, ResponseData, MintNft } from '../../models/interfaces/nft.interface';
@@ -31,7 +31,6 @@ export class NftsService {
   }
 
   async findAll(): Promise<ResponseData> {
-    this.logger.error('error');
     const resArr = [];
     try {
       let arr = [];
@@ -176,15 +175,15 @@ export class NftsService {
       }
     }
   }
-
+  
   async getMetadata(id: string): Promise<any> {
     try {
       const filterId = id.replace(/^0+/, '').split('.')[0];
       const nftId = filterId ? parseInt(filterId) - 1 : 0
       const chainNft = await getNFT(nftId);
       if (!chainNft || !chainNft.name)
-        return response({}, 'Nft metadata not found!!', false);
-  
+      return response({}, 'Nft metadata not found!!', false);
+      
       return {
         name: chainNft.name,
         description: chainNft.about || "Trotter Nft collectibles",

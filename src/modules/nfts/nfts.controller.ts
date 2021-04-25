@@ -1,9 +1,11 @@
-import { Controller, Body, Get, Param, Post, UseInterceptors, UploadedFile, ParseIntPipe } from '@nestjs/common';
+import { Controller, Body, Get, Param, Post, UseInterceptors, UploadedFile, ParseIntPipe, Res } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Response } from 'express';
 import { CreateNftDto, MigrateNftDto, MintNftDto, TransferNftDto } from '../../models/dtos/nft.dto';
 import { ResponseData } from '../../models/interfaces/nft.interface';
 import { NftsService } from './nfts.service';
+const fs = require('fs');
 
 @Controller()
 export class NftsController {
@@ -19,10 +21,10 @@ export class NftsController {
   @ApiBody({
     type: CreateNftDto,
   })
-  @ApiResponse({ status: 201, description: 'item created'})
-  @ApiResponse({ status: 400, description: 'invalid input | {msg}'})
-  @ApiResponse({ status: 409, description: 'an existing token already exists.'})
-  @ApiResponse({ status: 500, description: 'unexpected error.'})
+  @ApiResponse({ status: 201, description: 'item created' })
+  @ApiResponse({ status: 400, description: 'invalid input | {msg}' })
+  @ApiResponse({ status: 409, description: 'an existing token already exists.' })
+  @ApiResponse({ status: 500, description: 'unexpected error.' })
   @UseInterceptors(FileInterceptor('file'))
   create(@Body() createNftDto: CreateNftDto, @UploadedFile() file: Express.Multer.File): Promise<ResponseData> {
     return this.nftsService.create(createNftDto, file.buffer);
@@ -44,11 +46,11 @@ export class NftsController {
   })
   @ApiTags('admin')
   @Get('token/:tokenId')
-  @ApiResponse({ status: 201, description: 'token items.'})
-  @ApiResponse({ status: 404, description: 'token not found.'})
-  @ApiResponse({ status: 400, description: 'invalid input'})
+  @ApiResponse({ status: 201, description: 'token items.' })
+  @ApiResponse({ status: 404, description: 'token not found.' })
+  @ApiResponse({ status: 400, description: 'invalid input' })
   @ApiResponse({ status: 409, description: 'no tokens.' })
-  @ApiResponse({ status: 500, description: 'unexpected error.'})
+  @ApiResponse({ status: 500, description: 'unexpected error.' })
   findOne(@Param('tokenId', ParseIntPipe) id: number): Promise<ResponseData> {
     return this.nftsService.findOne(id);
   }
@@ -126,5 +128,21 @@ export class NftsController {
   @Get('/api/nfts/:tokenId')
   getMetadata(@Param('tokenId') id: string): Promise<ResponseData> {
     return this.nftsService.getMetadata(id);
+  }
+
+  @ApiOperation({
+    summary: 'Get logs file',
+    description: ''
+  })
+  @Get('/api/logs')
+  async getLogs(@Res() response: Response): Promise<any> {
+    const filename = __dirname + '/../../../errors.log';
+    const readStream = await fs.createReadStream(filename);
+    response.set({
+      'Content-Type': 'multipart/form-data',
+    });
+    
+    // This just pipes the read stream to the response object (which goes to the client)
+    return readStream.pipe(response);
   }
 }
