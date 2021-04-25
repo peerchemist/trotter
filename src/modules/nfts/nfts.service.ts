@@ -31,6 +31,7 @@ export class NftsService {
   }
 
   async findAll(): Promise<ResponseData> {
+    this.logger.error('error');
     const resArr = [];
     try {
       let arr = [];

@@ -19,8 +19,9 @@ export class TrotterLogger extends Logger {
     error(message: string, trace: string) {
         // add your tailored logic here
         const time = this.gettime()
-        const msg = `${time} \nMessage: \n${message} \nTrace: \n${trace} \n`
-        fs.writeFileSync('errors.log', msg, { flag: 'a' });
+        const msg = `${time} \nMessage: \n${message} \nTrace: \n${trace} \n`;
+        
+        fs.writeFileSync(__dirname+'/../../errors.log', msg, { flag: 'a' });
         super.error(message, trace);
     }
 }
