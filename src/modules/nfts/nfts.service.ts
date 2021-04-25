@@ -31,15 +31,14 @@ export class NftsService {
   }
 
   async findAll(): Promise<ResponseData> {
+    const resArr = [];
     try {
       let arr = [];
-
       for (let i = 0; i < config.listNetworks.length; i++) {
         console.log(config.listNetworks[i]);
         arr.push(fetchNFTs(config.listNetworks[i]));
       }
 
-      const resArr = [];
       (await Promise.all(arr)).map(data => resArr.push(...data));
 
       if (resArr.length < 1)
@@ -48,6 +47,8 @@ export class NftsService {
       return response(resArr, 'Nfts fetched successfully', true);
     } catch (error) {
       this.logger.error(error);
+      if (resArr.length > 0)
+        return response(resArr, 'Nfts fetched successfully', true);
       return nftResponse(error.message)
     }
   }
