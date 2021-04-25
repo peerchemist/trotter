@@ -1,4 +1,4 @@
-import { Injectable, Logger, Res } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Nft, TransferNft, MigrateNft, ResponseData, MintNft } from '../../models/interfaces/nft.interface';
@@ -10,6 +10,7 @@ require('dotenv').config();
 
 @Injectable()
 export class NftsService {
+  private readonly logger = new Logger(NftsService.name);
   constructor(@InjectModel('Nft') private readonly nftModel: Model<any>) { }
 
   // Get nft data from chain to validate what users preview
@@ -21,11 +22,11 @@ export class NftsService {
 
       return response(chainNft, 'Nft found', true);
     } catch (error) {
+      this.logger.error(error);
       if (error.message.includes("execution reverted"))
         return response({}, 'Nft not found!!', false);
       
-      Logger.error(error);
-        return nftResponse(error.message);
+      return nftResponse(error.message);
     }
   }
 
@@ -46,7 +47,7 @@ export class NftsService {
 
       return response(resArr, 'Nfts fetched successfully', true);
     } catch (error) {
-      Logger.error(error);
+      this.logger.error(error);
       return nftResponse(error.message)
     }
   }
@@ -67,7 +68,7 @@ export class NftsService {
       const save = await newNft.save();
       return response(save, 'Nft created successfully', true, nftRes.transactionHash);
     } catch (error) {
-      Logger.error(error);
+      this.logger.error(error);
       return nftResponse(error.message);
     }
   }
@@ -84,7 +85,7 @@ export class NftsService {
       return response(chainNft, 'Nft transfered successfully', true, nftRes.transactionHash);
 
     } catch (error) {
-      Logger.error(error);
+      this.logger.error(error);
       return nftResponse(error.message);
     }
   }
@@ -99,7 +100,7 @@ export class NftsService {
 
       return response(nftRes, 'Nft balance', true);
     } catch (error) {
-      Logger.error(error);
+      this.logger.error(error);
       return nftResponse(error.message);
     }
   }
@@ -115,8 +116,7 @@ export class NftsService {
 
       return await nftData.save();
     } catch (error) {
-      console.log(error);
-      Logger.error(error);
+      this.logger.error(error);
       return nftResponse(error.message);
     }
   }
@@ -130,7 +130,7 @@ export class NftsService {
 
       return response(chainNfts, 'Nfts holders fetched successfully', true);
     } catch (error) {
-      Logger.error(error);
+      this.logger.error(error);
       return nftResponse(error.message)
     }
   }
@@ -144,7 +144,7 @@ export class NftsService {
       
       return response({}, 'Nfts mint successfully', true, mintRes.transactionHash);
     } catch (error) {
-      Logger.error(error);
+      this.logger.error(error);
       return nftResponse(error.message)
     }
   }
@@ -158,7 +158,7 @@ export class NftsService {
   
       return response(getEditions, 'Nfts editions fetched successfully', true);
     } catch (error) {
-      Logger.error(error);
+      this.logger.error(error);
       return nftResponse(error.message)
     }
   }
@@ -190,8 +190,8 @@ export class NftsService {
         external_url: ""
       };
     } catch (error) {
-      Logger.error(error);
-      return nftResponse(error.message)
+      this.logger.error(error);
+      return nftResponse(error.message);
     }
   }
 }
