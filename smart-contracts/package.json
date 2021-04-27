@@ -6,7 +6,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "flatten": "./node_modules/.bin/poa-solidity-flattener ./contracts/TrotterNft.sol"
+    "flatten": "./node_modules/.bin/poa-solidity-flattener ./contracts/TrotterNft.sol",
+    "flattenErc721": "./node_modules/.bin/poa-solidity-flattener ./contracts/TrotterNftErc721.sol"
   },
   "keywords": [],
   "author": "Chris Ochuko",
