@@ -21,10 +21,19 @@ export const getContract = async (network?: string): Promise<any[]> => {
     return [accounts[0], nftContract, usenetwork, contractAddress, nonce, gasPrice];
 }
 
+export const isErc721 = async (): Promise<Boolean> => {
+    const [account, nftContract, , , nonce, gasPrice]: any[] = await getContract();
+    try {
+        await nftContract.methods.cards().call({ from: account });
+        return false;
+    } catch (error) {
+        return true;
+    }
+}
+
 export const createNFT = async (nft: Nft): Promise<any> => {
     const [account, nftContract, , , nonce, gasPrice]: any[] = await getContract(nft.network);
-    // const nftData = { name: nft.name, ipfsHash: nft.ipfsHash, price: nft.price, author: nft.author, about: nft.about, properties: JSON.stringify(nft.properties || ''), statement: JSON.stringify(nft.statement || '') };
-    const nftData = [nft.name, nft.ipfsHash, nft.price, nft.author, nft.about, JSON.stringify(nft.properties || ''), JSON.stringify(nft.statement || '')];    
+    const nftData = [nft.name, nft.ipfsHash, nft.price, nft.author, nft.about, JSON.stringify(nft.properties || ''), JSON.stringify(nft.statement || '')];  
     return await nftContract.methods.createNftCard(...nftData, account, nft.editions, 1).send({ from: account, gasPrice, gas: '1000000', nonce });
 }
 
