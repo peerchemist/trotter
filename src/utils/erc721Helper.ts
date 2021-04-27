@@ -41,7 +41,7 @@ export const fetchErc721s = async (usenetwork?: string): Promise<any> => {
 
     for (let i = 0; i < cards; i++) {
         nfts.push(nftContract.methods.nfts(i).call({ from: account }));
-        owners.push(nftContract.methods.nftOwner(i + 1).call());
+        owners.push(nftContract.methods.ownerOf(i).call());
     }
 
     const resNfts = await Promise.all(nfts);
@@ -53,38 +53,12 @@ export const fetchErc721s = async (usenetwork?: string): Promise<any> => {
     });
 }
 
-export const fetchErc721Holders = async (id): Promise<any> => {
-    const [account, nftContract, network, contractAddress]: any[] = await getContract();
-
-    const holders = [];
-    let moreHolder = true;
-    let i = 0;
-    while (moreHolder) {
-        try {
-            holders.push((await nftContract.methods.nftOwners(id, i).call({ from: account })));
-            i++;
-        } catch (error) {
-            moreHolder = false;
-        }
-    }
-    
-    const resholders = await Promise.all(holders);
-    const res = [];
-    for (let i = 0; i < resholders.length; i++) {
-        if (resholders[i] !== "0x0000000000000000000000000000000000000000" && !res.find(h => h.address == resholders[i])) {
-            const balance = await nftContract.methods.balanceOf(resholders[i], id).call();
-            res.push({ address: resholders[i], balance, network, contractAddress });
-        }
-    }
-    
-    return res;
-}
-
 export const getErc721 = async (id: number, useNetwork?: string): Promise<any> => {
     const [account, nftContract, network, contractAddress]: any[] = await getContract(useNetwork);
-    const res = await nftContract.methods.nfts(id - 1).call();
-    const owner = await nftContract.methods.nftOwner(id).call();
-    const nftObj = { ...res, contractAddress, owner }
+    const res = await nftContract.methods.nfts(id).call();
+    const owner = await nftContract.methods.ownerOf(id).call();
+    const nftObj = { ...res, contractAddress, owner };
+    
     return structNftResponse(nftObj, network);
 }
 

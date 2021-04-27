@@ -129,7 +129,6 @@ export class NftsService {
 
   async checkBalance(id: number, address: string): Promise<ResponseData> {
     try {
-      // transfer nft 
       let nftRes: any;
       if (isErc721()) {
         nftRes = await checkErc721Balance(address);
@@ -165,12 +164,19 @@ export class NftsService {
 
   async fetchTokenHolders(id: number): Promise<ResponseData> {
     try {
-      const chainNfts = await fetchNFTHolders(id);
+      let nftRes: any;
+      if (isErc721()) {
+        nftRes = await fetchErc721s();
+      } else {
+        nftRes = await fetchNFTHolders(id);
+      }
+
+      // const chainNfts = await fetchNFTHolders(id);
       
-      if (chainNfts.length < 1)
+      if (nftRes.length < 1)
         return response([], 'Nft not found', false);
 
-      return response(chainNfts, 'Nfts holders fetched successfully', true);
+      return response(nftRes, 'Nfts holders fetched successfully', true);
     } catch (error) {
       this.logger.error(error);
       return nftResponse(error.message)
@@ -193,12 +199,17 @@ export class NftsService {
 
   async fetchTokenEditions(id: number): Promise<ResponseData> {
     try {
-      const getEditions = await fetchNFTEditions(id);
+      let nftRes: any;
+      if (isErc721()) {
+        return response([], 'Erc721 editions not found', false);
+      } else {
+        nftRes = await fetchNFTEditions(id);
+      }
       
-      if (getEditions.length < 1)
+      if (nftRes.length < 1)
         return response([], 'Nft not found', false);
   
-      return response(getEditions, 'Nfts editions fetched successfully', true);
+      return response(nftRes, 'Nfts editions fetched successfully', true);
     } catch (error) {
       this.logger.error(error);
       return nftResponse(error.message)
@@ -220,20 +231,33 @@ export class NftsService {
   async getMetadata(id: string): Promise<any> {
     try {
       const filterId = id.replace(/^0+/, '').split('.')[0];
-      const nftId = filterId ? parseInt(filterId) - 1 : 0
-      const chainNft = await getNFT(nftId);
-      if (!chainNft || !chainNft.name)
-      return response({}, 'Nft metadata not found!!', false);
+      const nftId = filterId ? parseInt(filterId) : 0;
+
+      let resData: any;
+      resData = await this.nftModel.findOne({nftID: nftId});
+      if (!resData || !resData.name) {
+        if (isErc721()) {
+           resData = await getErc721(nftId);
+        } else {
+          resData = await getNFT(nftId);
+        }
+      }
       
       return {
-        name: chainNft.name,
-        description: chainNft.about || "Trotter Nft collectibles",
-        image: `https://ipfs.io/ipfs/${chainNft.ipfsHash}`,
+        name: resData.name,
+        description: resData.about || "Trotter Nft collectibles",
+        image: `https://ipfs.io/ipfs/${resData.ipfsHash}`,
         external_url: ""
       };
     } catch (error) {
       this.logger.error(error);
-      return nftResponse(error.message);
+      return response({}, 'Nft not found', false);
+      return {
+        name: "Finite Trotter",
+        description: "Trotter Nft collectibles",
+        image: ``,
+        external_url: ""
+      };
     }
   }
 }
