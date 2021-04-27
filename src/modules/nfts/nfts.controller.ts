@@ -60,9 +60,9 @@ export class NftsController {
     description: ''
   })
   @ApiTags('admin')
-  @Post('transfer/:tokenId')
-  transfer(@Body() transferNftDto: TransferNftDto, @Param('tokenId', ParseIntPipe) id: number): Promise<ResponseData> {
-    return this.nftsService.transferNft(transferNftDto, id);
+  @Post('transfer/:tokenId/:userAddress')
+  transfer(@Body() transferNftDto: TransferNftDto, @Param('tokenId', ParseIntPipe) id: number, @Param('userAddress') receiver: string): Promise<ResponseData> {
+    return this.nftsService.transferNft(transferNftDto, id, receiver);
   }
 
   @ApiOperation({

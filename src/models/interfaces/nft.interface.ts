@@ -16,8 +16,7 @@ export interface Nft {
 
 export interface TransferNft {
     network: string,
-    fee: number,
-    destination: string,
+    fee?: number
 }
 
 export interface MigrateNft {

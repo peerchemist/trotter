@@ -62,12 +62,7 @@ export class TransferNftDto {
     readonly network: string;
 
     @ApiProperty()
-    @IsNotEmpty()
-    readonly fee: number;
-
-    @ApiProperty()
-    @IsNotEmpty()
-    readonly destination: string;
+    readonly fee?: number;
 }
 
 
