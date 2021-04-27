@@ -5,8 +5,8 @@ import { Nft, TransferNft, MigrateNft, ResponseData, MintNft } from '../../model
 import { ipfsAdd } from '../../utils/ipfs';
 import { createNFT, transferNFT, migrateNFT, fetchNFTs, getNFT, fetchNFTHolders, checkNFTBalance, mintNFT, fetchNFTEditions, getContract, isErc721 } from 'src/utils/contractHelper';
 import { response, nftResponse } from 'src/utils/response';
+import { checkErc721Balance, createErc721, fetchErc721s, getErc721, transferErc721 } from 'src/utils/erc721Helper';
 import config from 'src/config/config';
-import { checkErc721Balance, createErc721, transferErc721 } from 'src/utils/erc721Helper';
 require('dotenv').config();
 
 @Injectable()
@@ -17,29 +17,64 @@ export class NftsService {
   // Get nft data from chain to validate what users preview
   async findOne(id: number): Promise<ResponseData> {
     try {
-      const chainNft = await getNFT(id);
-      if (!chainNft || !chainNft.name)
-        return response({}, 'Nft metadata not found!!', false);
-
-      return response(chainNft, 'Nft found', true);
+      const resArr = await this.nftModel.findOne({nftID: id});
+      if (resArr && resArr.name)
+        return response(resArr, 'Nft found', true);
+      
+      let chainNft: any;
+      if (isErc721()) {
+         chainNft = await getErc721(id);
+      } else {
+        chainNft = await getNFT(id);
+      }
+      
+      if (chainNft && chainNft.name)
+        return response(chainNft, 'Nft found', true);
+      
+      return response({}, 'Nft metadata not found!!', false);
     } catch (error) {
       this.logger.error(error);
       if (error.message.includes("execution reverted"))
         return response({}, 'Nft not found!!', false);
-      
       return nftResponse(error.message);
     }
   }
 
   async findAll(): Promise<ResponseData> {
+    const chainNfts = [];
     try {
       const resArr = await this.nftModel.find();
-      if (resArr.length < 1)
-        return response([], 'No nfts created yet!!', false);
+      if (resArr.length < 1) {
+        let arr = [];
+        for (let i = 0; i < config.listNetworks.length; i++) {
+          console.log(config.listNetworks[i]);
+          if (isErc721()) {
+            arr.push(fetchErc721s(config.listNetworks[i]));
+          } else {
+            arr.push(fetchNFTs(config.listNetworks[i]));
+          }
+        }
+  
+        (await Promise.all(arr)).map(data => chainNfts.push(...data));
+  
+        if (chainNfts.length < 1)
+          return response([], 'No nfts created yet!!', false);
+  
+        return response(chainNfts, 'Nfts fetched successfully', true);
+      }
+      
+      const nfts = resArr.map(nft => {
+        let res = { ...nft.toJSON() };
+        delete res._id;
+        delete res.__v;
+        return res;
+      })
 
-      return response(resArr, 'Nfts fetched successfully', true);
+      return response(nfts, 'Nfts fetched successfully', true);
     } catch (error) {
       this.logger.error(error);
+      if (chainNfts.length > 0)
+        return response(chainNfts, 'Nfts fetched successfully', true);
       return nftResponse(error.message)
     }
   }

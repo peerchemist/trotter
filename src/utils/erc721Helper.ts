@@ -82,8 +82,9 @@ export const fetchErc721Holders = async (id): Promise<any> => {
 
 export const getErc721 = async (id: number, useNetwork?: string): Promise<any> => {
     const [account, nftContract, network, contractAddress]: any[] = await getContract(useNetwork);
-    const res = await nftContract.methods.nfts(id - 1).call({ from: account });
-    const nftObj = { ...res, contractAddress }
+    const res = await nftContract.methods.nfts(id - 1).call();
+    const owner = await nftContract.methods.nftOwner(id).call();
+    const nftObj = { ...res, contractAddress, owner }
     return structNftResponse(nftObj, network);
 }
 
