@@ -36,4 +36,12 @@ contract('TrotterNFTErc721', async (accounts) => {
     balance = await instance.balanceOf(accounts[2]);
     assert.equal(0, balance.toNumber());
   });
+
+  it('Only admin can change uri', async () => {
+    const instance = await TrotterNFTErc721.deployed();
+    await instance.setURI("https://whatever/{id}.json", { from: accounts[0] });
+    await truffleAssert.reverts(instance.setURI("https://new/{id}.json", { from: accounts[2] }));
+    const uri = await instance.uri(1);
+    assert.equal("https://whatever/{id}.json", uri.toString());
+  });
 });

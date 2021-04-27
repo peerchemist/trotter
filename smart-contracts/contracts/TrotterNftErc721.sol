@@ -7,11 +7,9 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 contract TrotterNftErc721 is AccessControl, ERC721("Finite", "FNT") {
     using SafeMath for uint256;
-
-    function initialize() public {
-        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-    }
-
+    
+    // Used as the URI for all token types by relying on ID substitution, e.g. https://token-cdn-domain/{id}.json
+    string private _uri;
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
     struct nftMetadata {
@@ -29,6 +27,21 @@ contract TrotterNftErc721 is AccessControl, ERC721("Finite", "FNT") {
     nftMetadata[] public nfts;
     mapping(uint256 => nftMetadata) public getNft;
     mapping(uint256 => address) public nftOwner;
+
+    constructor(string memory uri_) {
+        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        _setupRole(MINTER_ROLE, _msgSender());
+        setURI(uri_);
+    }
+
+    function uri(uint256) public view virtual returns (string memory) {
+        return _uri;
+    }
+
+    function setURI(string memory newuri) public {
+        require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "Caller is not admin");
+        _uri = newuri;
+    }
 
     // events
     event CardAdded(uint256 id, address newOwner);
