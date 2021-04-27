@@ -56,7 +56,8 @@ contract TrotterNftErc721 is AccessControl, ERC721("Finite", "FNT") {
         address _owner
     ) public returns (uint256) {
         require(hasRole(MINTER_ROLE, _msgSender()), "Caller is not a minter");
-        uint256 nftId = nftIds.add(1);
+        nftIds = nftIds.add(1);
+        uint256 nftId = nftIds;
 
         nftMetadata memory data = nftMetadata({
             nftID: nftId,
