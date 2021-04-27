@@ -1,14 +1,30 @@
 import Web3 from 'src/utils/web3';
-import * as trotterNftAbi from '../config/abi/trotterNft.json';
+import * as trotterNftAbi from '../config/abi/trotterNftErc721.json';
 import { Nft } from 'src/models/interfaces/nft.interface';
 import { structNftResponse } from './response';
-import { getContract } from './contractHelper';
 import config from '../config/config';
+
+export const getContract = async (network?: string): Promise<any[]> => {
+    const defaultNetwork = config.networks.DEFAULT_NETWORK.replace('API_', '');
+    const contracts = config.contracts;
+    const usenetwork = network && contracts[network] && config.networks[network] ? network : defaultNetwork;
+    console.log({usenetwork});
+    
+    const web3 = Web3(usenetwork)
+    const gasPrice = await web3.eth.getGasPrice()
+    const accounts: string[] = await web3.eth.getAccounts();
+    // get transaction count for this wallet
+    const nonce = await web3.eth.getTransactionCount(accounts[0])
+    const contractAddress = contracts[usenetwork];
+    const nftContract: any = new web3.eth.Contract(trotterNftAbi, contractAddress);
+    
+    return [accounts[0], nftContract, usenetwork, contractAddress, nonce, gasPrice];
+}
 
 export const createErc721 = async (nft: Nft): Promise<any> => {
     const [account, nftContract, , , nonce, gasPrice]: any[] = await getContract(nft.network);
     const nftData = [nft.name, nft.ipfsHash, nft.price, nft.author, nft.about, JSON.stringify(nft.properties || ''), JSON.stringify(nft.statement || '')];    
-    return await nftContract.methods.createNftCard(...nftData, account).send({ from: account, gasPrice, gas: '1000000', nonce });
+    return await nftContract.methods.createNft(...nftData, account).send({ from: account, gasPrice, gas: '1000000', nonce });
 }
 
 export const transferErc721 = async (network: string, to: string, nftID: number): Promise<any> => {
