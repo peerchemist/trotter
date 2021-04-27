@@ -3,9 +3,10 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Nft, TransferNft, MigrateNft, ResponseData, MintNft } from '../../models/interfaces/nft.interface';
 import { ipfsAdd } from '../../utils/ipfs';
-import { createNFT, transferNFT, migrateNFT, fetchNFTs, getNFT, fetchNFTHolders, checkNFTBalance, mintNFT, fetchNFTEditions, getContract } from 'src/utils/contractHelper';
+import { createNFT, transferNFT, migrateNFT, fetchNFTs, getNFT, fetchNFTHolders, checkNFTBalance, mintNFT, fetchNFTEditions, getContract, isErc721 } from 'src/utils/contractHelper';
 import { response, nftResponse } from 'src/utils/response';
 import config from 'src/config/config';
+import { checkErc721Balance, createErc721, transferErc721 } from 'src/utils/erc721Helper';
 require('dotenv').config();
 
 @Injectable()
@@ -57,8 +58,14 @@ export class NftsService {
     try {
       const res = await ipfsAdd(fileBuffer);
       nft.ipfsHash = res.path;
-      // send to nft smart contract for mint
-      const nftRes = await createNFT(nft);
+
+      let nftRes: any;
+      if (isErc721()) {
+        nftRes = await createErc721(nft);
+      } else {
+        // send to nft smart contract for mint
+        nftRes = await createNFT(nft);
+      }
 
       // update nft object with nftId created on the blockchain
       nft.nftID = nftRes.events.CardAdded.returnValues.id
@@ -75,7 +82,13 @@ export class NftsService {
   async transferNft(nft: TransferNft, id: number, receiver: string): Promise<ResponseData> {
     try {
       // transfer nft 
-      const nftRes = await transferNFT(nft.network, receiver, id);
+      let nftRes: any;
+      if (isErc721()) {
+        nftRes = await transferErc721(nft.network, receiver, id);
+      } else {
+        nftRes = await transferNFT(nft.network, receiver, id);
+      }
+
       const chainNft = await getNFT(id, nft.network);
 
       if (!chainNft || !chainNft.name)
@@ -92,7 +105,12 @@ export class NftsService {
   async checkBalance(id: number, address: string): Promise<ResponseData> {
     try {
       // transfer nft 
-      const nftRes = await checkNFTBalance(id, address);
+      let nftRes: any;
+      if (isErc721()) {
+        nftRes = await checkErc721Balance(address);
+      } else {
+        nftRes = await checkNFTBalance(id, address);
+      }
 
       if (!nftRes || !nftRes.balance)
         return response({}, 'Nft not found!!', false);
