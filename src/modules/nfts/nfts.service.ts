@@ -79,17 +79,17 @@ export class NftsService {
     }
   }
 
-  async transferNft(nft: TransferNft, id: number, receiver: string): Promise<ResponseData> {
+  async transferNft(id: number, receiver: string): Promise<ResponseData> {
     try {
       // transfer nft 
       let nftRes: any;
       if (isErc721()) {
-        nftRes = await transferErc721(nft.network, receiver, id);
+        nftRes = await transferErc721("", receiver, id);
       } else {
-        nftRes = await transferNFT(nft.network, receiver, id);
+        nftRes = await transferNFT("", receiver, id);
       }
 
-      const chainNft = await getNFT(id, nft.network);
+      const chainNft = await getNFT(id, "");
 
       if (!chainNft || !chainNft.name)
         return response({}, 'Nft metadata not found!!', false);

@@ -29,7 +29,7 @@ export const createErc721 = async (nft: Nft): Promise<any> => {
 
 export const transferErc721 = async (network: string, to: string, nftID: number): Promise<any> => {
     const [account, nftContract, , , nonce]: any[] = await getContract(network);
-    return await nftContract.methods.transfer(account, to, nftID).send({ from: account, nonce });
+    return await nftContract.methods.transferFrom(account, to, nftID).send({ from: account, nonce });
 }
 
 export const fetchErc721s = async (usenetwork?: string): Promise<any> => {

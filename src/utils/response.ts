@@ -41,6 +41,7 @@ export const nftResponse = (errMessage: string) => {
         { msg: 'ERC1155: balance query for the zero address', status: 400 },
         { msg: 'value out-of-bounds', status: 400 },
         { msg: 'invalid BigNumber string', status: 400 },
+        { msg: 'ERC721: transfer caller is not owner nor approved', status: 400 },
     ];
 
     const resMsg = errorMsgs.find(msg => errMessage.includes(msg.msg) || errMessage == msg.msg)
