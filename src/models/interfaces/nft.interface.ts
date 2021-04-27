@@ -1,14 +1,14 @@
 export interface Nft {
     id?: string,
-    network: string,
+    network?: string,
     nftID?: number,
     ipfsHash?: string,
     name: string,
     author: string,
     owner?: string,
     about: string,
-    editions: number
-    price: number
+    editions?: number
+    price?: number
     properties?: object
     statement?: object
     circulatingSupply?: number,
