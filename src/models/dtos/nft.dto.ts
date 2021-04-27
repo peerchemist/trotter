@@ -7,7 +7,7 @@ export class CreateNftDto {
 
     @ApiProperty()
     @IsNotEmpty()
-    readonly network: string;
+    readonly network?: string;
 
     @ApiProperty()
     @IsNotEmpty()
@@ -25,11 +25,11 @@ export class CreateNftDto {
     readonly about: string;
 
     @ApiProperty()
-    readonly editions: number;
+    readonly editions?: number;
 
     @ApiProperty()
     @IsNotEmpty()
-    readonly price: number;
+    readonly price?: number;
 
     @ApiProperty({ required: false })
     readonly properties: object;
