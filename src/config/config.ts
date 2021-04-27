@@ -27,8 +27,8 @@ export default {
         'MATIC_MAINNET',
         // 'ETH_MAINNET',
         'BSC_MAINNET',
-        'MATIC_TESTNET',
-        'BSC_TESTNET',
+        // 'MATIC_TESTNET',
+        // 'BSC_TESTNET',
         'ETH_TESTNET',
     ],
     throttler: {
