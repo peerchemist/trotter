@@ -33,7 +33,7 @@ services:
       - API_ETH_MAINNET=https://mainnet.infura.io/v3/f3f30b367c6c45c093d0a7c7bd7709fa
       - API_BSC_TESTNET=https://data-seed-prebsc-1-s2.binance.org:8545
       - API_BSC_MAINNET=https://bsc-dataseed.binance.org
-      - API_DEFAULT_NETWORK=API_MATIC_TESTNET
+      - API_DEFAULT_NETWORK=API_ETH_TESTNET
       ## Contract addresses
       - NFT_CONTRACT_MATIC_MAINNET=0x0cDEEEe67dF0AD9b9b81AdA2E9E3F4c0edC62473
       - NFT_CONTRACT_ETH_MAINNET=
