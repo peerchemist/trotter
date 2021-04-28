@@ -237,11 +237,12 @@ export class NftsService {
       let resData: any;
       resData = await this.nftModel.findOne({nftID: nftId});
       if (!resData || !resData.name) {
-        if (isErc721()) {
-           resData = await getErc721(nftId);
-        } else {
-          resData = await getNFT(nftId);
-        }
+        return response({}, 'Nft not found', false);
+      //   if (isErc721()) {
+      //      resData = await getErc721(nftId);
+      //   } else {
+      //     resData = await getNFT(nftId);
+      //   }
       }
       
       return {
