@@ -94,7 +94,8 @@ export class NftsService {
       }
 
       // update nft object with nftId created on the blockchain
-      nft.nftID = nftRes.events.CardAdded.returnValues.id
+      nft.nftID = nftRes.events.CardAdded.returnValues.id;
+      nft.network = nft.network || config.networks.DEFAULT_NETWORK.replace('API_', '');
 
       const newNft = new this.nftModel(nft);
       const save = await newNft.save();
