@@ -45,22 +45,23 @@ export class NftsService {
     try {
       const resArr = await this.nftModel.find();
       if (resArr.length < 1) {
-        let arr = [];
-        for (let i = 0; i < config.listNetworks.length; i++) {
-          console.log(config.listNetworks[i]);
-          if (isErc721()) {
-            arr.push(fetchErc721s(config.listNetworks[i]));
-          } else {
-            arr.push(fetchNFTs(config.listNetworks[i]));
-          }
-        }
+        return response([], 'No nfts created yet!!', false);
+      //   let arr = [];
+      //   for (let i = 0; i < config.listNetworks.length; i++) {
+      //     console.log(config.listNetworks[i]);
+      //     if (isErc721()) {
+      //       arr.push(fetchErc721s(config.listNetworks[i]));
+      //     } else {
+      //       arr.push(fetchNFTs(config.listNetworks[i]));
+      //     }
+      //   }
   
-        (await Promise.all(arr)).map(data => chainNfts.push(...data));
+      //   (await Promise.all(arr)).map(data => chainNfts.push(...data));
   
-        if (chainNfts.length < 1)
-          return response([], 'No nfts created yet!!', false);
+      //   if (chainNfts.length < 1)
+      //     return response([], 'No nfts created yet!!', false);
   
-        return response(chainNfts, 'Nfts fetched successfully', true);
+      //   return response(chainNfts, 'Nfts fetched successfully', true);
       }
       
       const nfts = resArr.map(nft => {
