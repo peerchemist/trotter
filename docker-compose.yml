@@ -29,8 +29,8 @@ services:
       ## Supported networks
       - API_MATIC_TESTNET=https://rpc-mumbai.maticvigil.com/
       - API_MATIC_MAINNET=https://rpc-mainnet.maticvigil.com/
-      - API_ETH_TESTNET=https://rinkeby.infura.io/v3/f3f30b367c6c45c093d0a7c7bd7709fa
-      - API_ETH_MAINNET=https://mainnet.infura.io/v3/f3f30b367c6c45c093d0a7c7bd7709fa
+      - API_ETH_TESTNET=https://rinkeby.infura.io/v3/eb2a4aeb4d414af48b46709684b5d1dd
+      - API_ETH_MAINNET=https://mainnet.infura.io/v3/eb2a4aeb4d414af48b46709684b5d1dd
       - API_BSC_TESTNET=https://data-seed-prebsc-1-s2.binance.org:8545
       - API_BSC_MAINNET=https://bsc-dataseed.binance.org
       - API_DEFAULT_NETWORK=API_ETH_TESTNET
