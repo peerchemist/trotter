@@ -235,19 +235,19 @@ export class NftsService {
       const nftId = filterId ? parseInt(filterId) : 0;
 
       let resData: any;
-      resData = await this.nftModel.findOne({nftID: nftId});
-      if (!resData || !resData.name) {
-        return response({}, 'Nft not found', false);
-      //   if (isErc721()) {
-      //      resData = await getErc721(nftId);
-      //   } else {
-      //     resData = await getNFT(nftId);
-      //   }
-      }
+      // resData = await this.nftModel.findOne({nftID: nftId});
+      // if (!resData || !resData.name) {
+        // return response({}, 'Nft not found', false);
+        if (isErc721()) {
+           resData = await getErc721(nftId);
+        } else {
+          resData = await getNFT(nftId);
+        }
+      // }
       
       return {
         name: resData.name,
-        description: resData.about || "Trotter Nft collectibles",
+        description: resData.description || "Trotter Nft collectibles",
         image: `https://ipfs.io/ipfs/${resData.ipfsHash}`,
         external_url: ""
       };

@@ -24,6 +24,7 @@ export const structNftResponse = (nft: any, network?: string) => {
         editions: nft['editions'],
         circulatingSupply: nft['circulatingSupply'],
         about: nft['about'],
+        description: nft['description'],
         properties: JSON.parse(nft['properties']),
         statement: JSON.parse(nft['statement']),
     }
