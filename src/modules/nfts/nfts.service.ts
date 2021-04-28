@@ -218,14 +218,16 @@ export class NftsService {
     }
   }
 
-  async getAdminAddress(): Promise<any> {
-    const [address, {}, network] = await getContract();
+  async getAdminAddress(balance?: string): Promise<any> {
+    const [address, nftContract, network] = await getContract();
+    const resbalance = balance == 'balance' ? await checkErc721Balance(address) : undefined;
 
     return {
       message: "admin address",
       data: {
         network,
         adminAddress: address,
+        balance: resbalance
       }
     }
   }

@@ -1,7 +1,8 @@
-import { Controller, Body, Get, Param, Post, UseInterceptors, UploadedFile, ParseIntPipe, Res } from '@nestjs/common';
+import { Controller, Body, Get, Param, Post, Query, UseInterceptors, UploadedFile, ParseIntPipe, Res } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
+import { Balance } from 'src/models/enums/nft.enums';
 import { CreateNftDto, MigrateNftDto, MintNftDto, TransferNftDto } from '../../models/dtos/nft.dto';
 import { ResponseData } from '../../models/interfaces/nft.interface';
 import { NftsService } from './nfts.service';
@@ -116,9 +117,10 @@ export class NftsController {
     summary: 'Get address of currently set privatekey/mnemonic.',
     description: ''
   })
-  @Get('/address/')
-  getAdminAddress(): Promise<ResponseData> {
-    return this.nftsService.getAdminAddress();
+  @Get('/address')
+  @ApiQuery({ name: 'balance', enum: Balance })
+  getAdminAddress(@Query('balance') balance: Balance = Balance.default): Promise<ResponseData> {
+    return this.nftsService.getAdminAddress(balance);
   }
 
   @ApiOperation({
