@@ -1,6 +1,6 @@
 {
   "name": "trotter-api",
-  "version": "0.1",
+  "version": "0.0.1",
   "description": "Trotter does abstraction on creation of NFT tokens on multiple EVM-based blockchain networks.",
   "author": "Chris",
   "private": true,
