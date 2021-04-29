@@ -11,7 +11,25 @@ services:
     ports:
       - 27017:27017
     restart: unless-stopped
-  
+
+  ipfs:
+    image: ghcr.io/linuxserver/ipfs
+    container_name: ipfs
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+    volumes:
+      - ./ipfs:/config
+    ports:
+    # - 80:80 # webui
+      - 4001:4001 # p2p network port
+      - 127.0.0.1:5001:5001 # api port
+    #  - 8080:8080 # gateway port
+    restart: unless-stopped
+    depends_on:
+      - trotter
+
   trotter:
     build:
       context: .

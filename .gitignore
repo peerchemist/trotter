@@ -41,3 +41,6 @@ package-lock.json
 
 # test db
 mongodb
+
+# ipfs stuff
+ipfs
