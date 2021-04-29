@@ -6,7 +6,6 @@ import { ipfsAdd } from '../../utils/ipfs';
 import { createNFT, transferNFT, migrateNFT, fetchNFTs, getNFT, fetchNFTHolders, checkNFTBalance, mintNFT, fetchNFTEditions, getContract, isErc721 } from 'src/utils/contractHelper';
 import { response, nftResponse } from 'src/utils/response';
 import { checkErc721Balance, createErc721, fetchErc721s, getErc721, transferErc721 } from 'src/utils/erc721Helper';
-import config from 'src/config/config';
 require('dotenv').config();
 
 @Injectable()
@@ -95,7 +94,7 @@ export class NftsService {
 
       // update nft object with nftId created on the blockchain
       nft.nftID = nftRes.events.CardAdded.returnValues.id;
-      nft.network = nft.network || config.networks.DEFAULT_NETWORK.replace('API_', '');
+      nft.network = nftRes.network;
 
       const newNft = new this.nftModel(nft);
       const save = await newNft.save();

@@ -32,9 +32,11 @@ export const isErc721 = async (): Promise<Boolean> => {
 }
 
 export const createNFT = async (nft: Nft): Promise<any> => {
-    const [account, nftContract, , , nonce, gasPrice]: any[] = await getContract(nft.network);
+    const [account, nftContract, usenetwork, , nonce, gasPrice]: any[] = await getContract(nft.network);
     const nftData = [nft.name, nft.ipfsHash, nft.price, nft.author, nft.about, JSON.stringify(nft.properties || ''), JSON.stringify(nft.statement || '')];  
-    return await nftContract.methods.createNftCard(...nftData, account, nft.editions, 1).send({ from: account, gasPrice, gas: '1000000', nonce });
+    const res = await nftContract.methods.createNftCard(...nftData, account, nft.editions, 1).send({ from: account, gasPrice, gas: '1000000', nonce });
+    res.network = usenetwork;
+    return res;
 }
 
 export const transferNFT = async (network: string, to: string, nftID: number): Promise<any> => {
