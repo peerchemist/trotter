@@ -42,7 +42,7 @@ export const fetchErc721s = async (usenetwork?: string): Promise<any> => {
     const owners = [];
 
     for (let i = 0; i < cards; i++) {
-        nfts.push(nftContract.methods.nfts(i).call({ from: account }));
+        nfts.push(nftContract.methods.nfts(i - 9000).call({ from: account }));
         owners.push(nftContract.methods.ownerOf(i).call());
     }
 
@@ -57,7 +57,7 @@ export const fetchErc721s = async (usenetwork?: string): Promise<any> => {
 
 export const getErc721 = async (id: number, useNetwork?: string): Promise<any> => {
     const [account, nftContract, network, contractAddress]: any[] = await getContract(useNetwork);
-    const res = await nftContract.methods.nfts(id).call();
+    const res = await nftContract.methods.nfts(id - 9000).call();
     const owner = await nftContract.methods.ownerOf(id).call();
     const nftObj = { ...res, contractAddress, owner };
     

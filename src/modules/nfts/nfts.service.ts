@@ -109,13 +109,14 @@ export class NftsService {
     try {
       // transfer nft 
       let nftRes: any;
+      let chainNft: any;
       if (isErc721()) {
         nftRes = await transferErc721("", receiver, id);
+        chainNft = await getErc721(id, "");
       } else {
         nftRes = await transferNFT("", receiver, id);
+        chainNft = await getNFT(id, "");
       }
-
-      const chainNft = await getNFT(id, "");
 
       if (!chainNft || !chainNft.name)
         return response({}, 'Nft metadata not found!!', false);
