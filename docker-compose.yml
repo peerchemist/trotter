@@ -39,11 +39,13 @@ services:
       - MONGODB_URL="mongodb://mongo/trotternfts?readPreference=primary&appname=MongoDB%20Compass&ssl=false"
       - MNEMONIC=input engage salon smooth choose buffalo priority february advice crop visit stand
       - TROTTER_NODE_ENV=develop
-    # rate limiting / timeout
+      ## rate limiting / timeout
       - LIMIT=10
       - TTL=60
-    #  - ADMIN_USERNAME=""
-    #  - ADMIN_PASSWORD=""
+      ## Auth
+      ### Trotter will not take auth into consideration unless TROTTER_MODE is set to "prod"
+      - ADMIN_USERNAME="admin"
+      - ADMIN_PASSWORD="PeHonWat="
       ## Supported networks
       - API_MATIC_TESTNET=https://rpc-mumbai.maticvigil.com/
       - API_MATIC_MAINNET=https://rpc-mainnet.maticvigil.com/
