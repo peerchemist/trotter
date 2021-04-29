@@ -1,8 +1,8 @@
 import config from 'src/config/config';
 const IpfsHttpClient = require('ipfs-http-client');
-const { pin, host, port } = config.ipfs;
+const { pin, host, port, protocol } = config.ipfs;
 
-const ipfs = IpfsHttpClient({ host, port, protocol: 'https' });
+const ipfs = IpfsHttpClient({ host, port, protocol });
 export default ipfs;
 
 export const ipfsAdd = async (buffer: Buffer): Promise<any> => {

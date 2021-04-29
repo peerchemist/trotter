@@ -45,6 +45,7 @@ services:
       - IPFS_PINN=false
       - IPFS_HOST=ipfs.infura.io
       - IPFS_PORT=5001
+      - IPFS_PROTOCOL=https
 
     ports:
       - 3000:3000

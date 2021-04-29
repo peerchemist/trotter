@@ -38,6 +38,7 @@ export default {
     ipfs: {
         pin: process.env['IPFS_PINN'],
         host: process.env['IPFS_HOST'],
-        port: process.env['IPFS_PORT']
+        port: process.env['IPFS_PORT'],
+        protocol: process.env['IPFS_PROTOCOL']
     }
 }
