@@ -5,18 +5,19 @@
 
 import { Request, Response, NextFunction } from 'express';
 import config from '../config/config';
-import tsscmp from 'tsscmp'
+import tsscmp from 'tsscmp';
+
+const WWW_AUTHENTICATE_HEADER = 'Basic realm="apKey"';
 
 export function auth(req: Request, res: Response, next: NextFunction) {
-
     if (!config.isProductionEnvironment) {
         next();
-        return
+        return;
     }
-
     // check for basic auth header
-    if (!req.headers.authorization || req.headers.authorization.startsWith('Basic ')) {
-        return res.status(401).send({ message: 'Access Denied!!' });
+    if (!req.headers.authorization || !req.headers.authorization.startsWith('Basic ')) {
+        res.setHeader('WWW-Authenticate', WWW_AUTHENTICATE_HEADER);
+        return res.status(401).json({ message: 'Access Denied!!' });
     }
 
     // verify auth credentials
@@ -25,8 +26,11 @@ export function auth(req: Request, res: Response, next: NextFunction) {
     const [username, password] = credentials.split(':');
 
     // check if api details is valid and prevent timing attacks
-    if (!tsscmp(config.adminUsername, username) || !tsscmp(config.adminPassword !== password)) {
-        res.setHeader('WWW-Authenticate', 'Basic realm="apKey"');
+    if (
+        !tsscmp(config.adminUsername, username) ||
+        !tsscmp(config.adminPassword, password)
+    ) {
+        res.setHeader('WWW-Authenticate', WWW_AUTHENTICATE_HEADER);
         return res.status(401).json({ message: 'Invalid Authentication Credentials' });
     }
 
