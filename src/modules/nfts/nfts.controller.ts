@@ -6,11 +6,12 @@ import { Balance } from 'src/models/enums/nft.enums';
 import { CreateNftDto, MigrateNftDto, MintNftDto, TransferNftDto } from '../../models/dtos/nft.dto';
 import { ResponseData } from '../../models/interfaces/nft.interface';
 import { NftsService } from './nfts.service';
+import { Logger } from 'nestjs-pino';
 const fs = require('fs');
 
 @Controller()
 export class NftsController {
-  constructor(private readonly nftsService: NftsService) { }
+  constructor(private readonly nftsService: NftsService, private readonly logger: Logger) { }
 
   @ApiOperation({
     summary: 'Create a NFT token',
@@ -143,7 +144,7 @@ export class NftsController {
     response.set({
       'Content-Type': 'multipart/form-data',
     });
-    
+
     // This just pipes the read stream to the response object (which goes to the client)
     return readStream.pipe(response);
   }
