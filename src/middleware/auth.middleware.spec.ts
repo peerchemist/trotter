@@ -43,6 +43,7 @@ describe('AuthMiddleware', () => {
       nextMock,
     );
     expect(responseMock.status).toHaveBeenCalledTimes(1);
+    expect(responseMock.status).toHaveBeenCalledWith(401);
     expect(responseMock.json).toHaveBeenCalled();
     expect(nextMock).not.toHaveBeenCalled();
   });
@@ -57,6 +58,7 @@ describe('AuthMiddleware', () => {
       nextMock,
     );
     expect(responseMock.status).toHaveBeenCalledTimes(1);
+    expect(responseMock.status).toHaveBeenCalledWith(401);
     expect(responseMock.json).toHaveBeenCalled();
     expect(responseMock.status).lastCalledWith(401);
   });
@@ -70,8 +72,8 @@ describe('AuthMiddleware', () => {
       responseMock,
       nextMock,
     );
-    expect(responseMock.status).toHaveBeenCalled();
+    expect(responseMock.status).toHaveBeenCalledTimes(1);
+    expect(responseMock.status).toHaveBeenCalledWith(401);
     expect(responseMock.json).toHaveBeenCalled();
-    expect(responseMock.status).lastCalledWith(401);
   });
-})
+});
