@@ -6,6 +6,7 @@ export default {
     adminUsername: process.env['ADMIN_USERNAME'],
     adminPassword: process.env['ADMIN_PASSWORD'],
     nodeEnv: process.env['TROTTER_NODE_ENV'],
+    isProductionEnvironment: process.env['TROTTER_NODE_ENV'].trim() === 'production',
     networks: {
         MATIC_MAINNET: process.env['API_MATIC_MAINNET'],
         ETH_MAINNET: process.env['API_ETH_MAINNET'],
