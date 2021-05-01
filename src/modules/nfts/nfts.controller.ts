@@ -7,6 +7,8 @@ import { CreateNftDto, MigrateNftDto, MintNftDto, TransferNftDto } from '../../m
 import { ResponseData } from '../../models/interfaces/nft.interface';
 import { NftsService } from './nfts.service';
 import { Logger } from 'nestjs-pino';
+import path from 'path'
+
 const fs = require('fs');
 
 @Controller()
@@ -139,8 +141,8 @@ export class NftsController {
   })
   @Get('/log')
   async getLogs(@Res() response: Response): Promise<any> {
-    const filename = __dirname + '/../../../errors.log';
-    const readStream = await fs.createReadStream(filename);
+    const logFile = path.resolve('./trotter.log');
+    const readStream = await fs.createReadStream(logFile);
     response.set({
       'Content-Type': 'multipart/form-data',
     });
