@@ -1,9 +1,9 @@
+import 'source-map-support/register';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { auth } from './middleware/auth.middleware';
-import { TrotterLogger } from './utils/logger';
 
 async function bootstrap() {
   const corsOptions = {
@@ -14,10 +14,7 @@ async function bootstrap() {
     credentials: true,
     allowedHeaders: '*',
   };
-  const app = await NestFactory.create(AppModule, {
-    logger: new TrotterLogger(),
-    // logger: ['error', 'warn', 'debug', 'log']
-  });
+  const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
     .setTitle('Trotter NFT API.')
