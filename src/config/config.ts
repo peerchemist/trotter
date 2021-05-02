@@ -29,7 +29,7 @@ export default {
         // 'BSC_MAINNET': 'erc721',
         // 'MATIC_TESTNET',
         // 'BSC_TESTNET',
-        // 'ETH_TESTNET': 'erc721'
+        'ETH_TESTNET': 'erc721'
     },
     throttler: {
         ttl: process.env['TTL'],
