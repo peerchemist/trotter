@@ -180,7 +180,7 @@ export class NftsService {
       // const chainNfts = await fetchNFTHolders(id);
       
       if (nftRes.length < 1)
-        return response([], 'Nft not found', false);
+        return response([], 'Nft(s) not found', false);
 
       return response(nftRes, 'Nfts holders fetched successfully', true);
     } catch (error) {

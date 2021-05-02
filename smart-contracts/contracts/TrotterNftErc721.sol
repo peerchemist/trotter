@@ -23,7 +23,7 @@ contract TrotterNftErc721 is AccessControl, ERC721("Finite", "FNT") {
         string statement;
     }
 
-    uint256 private _currentTokenId = 9000;
+    uint256 public currentTokenId = 9000;
     nftMetadata[] public nfts;
     mapping(uint256 => nftMetadata) public getNft;
     mapping(uint256 => address) public nftOwner;
@@ -77,8 +77,8 @@ contract TrotterNftErc721 is AccessControl, ERC721("Finite", "FNT") {
         address _owner
     ) public returns (uint256) {
         require(hasRole(MINTER_ROLE, _msgSender()), "Caller is not a minter");
-        uint256 nftId = _currentTokenId;
-        _currentTokenId = _currentTokenId.add(1);
+        uint256 nftId = currentTokenId;
+        currentTokenId = currentTokenId.add(1);
 
         nftMetadata memory data = nftMetadata({
             nftID: nftId,
