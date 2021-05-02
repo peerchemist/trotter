@@ -7,6 +7,7 @@ import { CreateNftDto, MigrateNftDto, MintNftDto, TransferNftDto } from '../../m
 import { ResponseData } from '../../models/interfaces/nft.interface';
 import { NftsService } from './nfts.service';
 import { Logger } from 'nestjs-pino';
+import config from '../../config/config';
 import path from 'path'
 
 const fs = require('fs');
@@ -30,8 +31,20 @@ export class NftsController {
   @ApiResponse({ status: 400, description: 'invalid input | {msg}' })
   @ApiResponse({ status: 409, description: 'an existing token already exists.' })
   @ApiResponse({ status: 500, description: 'unexpected error.' })
-  @UseInterceptors(FileInterceptor('file', { limits: { fileSize: 20 * 1024 * 1024 } }))
-  create(@Body() createNftDto: CreateNftDto, @UploadedFile() file: Express.Multer.File, @Headers('network') network: Networks = Networks.DEFAULT): Promise<ResponseData> {
+  @UseInterceptors(
+    FileInterceptor('file', {
+      limits: {
+        fileSize: config.MULTIPART.MAX_FILE_SIZE,
+        fields: config.MULTIPART.MAX_FIELD_LIMIT,
+        parts: config.MULTIPART.MAX_PARTS,
+      },
+    }),
+  )
+  create(
+    @Body() createNftDto: CreateNftDto,
+    @UploadedFile() file: Express.Multer.File,
+    @Headers('network') network: Networks = Networks.DEFAULT,
+  ): Promise<ResponseData> {
     return this.nftsService.create(network, createNftDto, file.buffer);
   }
 
