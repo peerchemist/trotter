@@ -1,24 +1,26 @@
 import Web3 from 'src/utils/web3';
-import * as trotterNftAbi from '../config/abi/trotterNftErc721.json';
 import { Nft } from 'src/models/interfaces/nft.interface';
 import { structNftResponse } from './response';
 import config from '../config/config';
+const fs = require('fs');
 
 export const getContract = async (network: string): Promise<any[]> => {
     const defaultNetwork = config.networks.DEFAULT_NETWORK.replace('API_', '');
     const contracts = config.contracts;
     const usenetwork = network && contracts[network] && config.networks[network] ? network : defaultNetwork;
-    console.log({usenetwork});
+    console.log({ usenetwork });
     
     const web3 = Web3(usenetwork);
     const gasPrice = await web3.eth.getGasPrice();
-    const gas = !network.includes('MAINNET') && 1000000;
+    const gas = !network.includes('MATIC_MAINNET') && 1000000;
     const accounts: string[] = await web3.eth.getAccounts();
     // get transaction count for this wallet
     const nonce = await web3.eth.getTransactionCount(accounts[0])
     const contractAddress = contracts[usenetwork];
-    const nftContract: any = new web3.eth.Contract(trotterNftAbi, contractAddress);
-    
+
+    const contractJson = fs.readFileSync('src/config/abi/trotterNftErc721.json');
+    const abi = JSON.parse(contractJson);
+    const nftContract: any = new web3.eth.Contract(abi, contractAddress);
     return [accounts[0], nftContract, usenetwork, contractAddress, nonce, gasPrice, gas];
 }
 
