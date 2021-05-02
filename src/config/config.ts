@@ -24,12 +24,12 @@ export default {
         BSC_TESTNET: process.env['NFT_CONTRACT_BSC_TESTNET'],
     },
     listedNetworks: {
-        // 'MATIC_MAINNET',
+        'MATIC_MAINNET': 'erc721',
         // 'ETH_MAINNET',
         // 'BSC_MAINNET': 'erc721',
         // 'MATIC_TESTNET',
         // 'BSC_TESTNET',
-        'ETH_TESTNET': 'erc721'
+        // 'ETH_TESTNET': 'erc721'
     },
     throttler: {
         ttl: process.env['TTL'],
