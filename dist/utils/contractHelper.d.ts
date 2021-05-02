@@ -1,0 +1,12 @@
+import { Nft } from 'src/models/interfaces/nft.interface';
+export declare const getContract: (network: string) => Promise<any[]>;
+export declare const isErc721: (network: string) => Promise<Boolean>;
+export declare const createNFT: (network: any, nft: Nft) => Promise<any>;
+export declare const transferNFT: (network: string, to: string, nftID: number) => Promise<any>;
+export declare const migrateNFT: (fromNetwork: string, toNetwork: string, nftID: number) => Promise<any>;
+export declare const fetchNFTs: (usenetwork?: string) => Promise<any>;
+export declare const fetchNFTHolders: (network: any, id: any) => Promise<any>;
+export declare const getNFT: (network: string, id: number) => Promise<any>;
+export declare const checkNFTBalance: (network: any, id: number, address: string) => Promise<any>;
+export declare const mintNFT: (network: string, nftID: number, to: string, amount: number) => Promise<any>;
+export declare const fetchNFTEditions: (network: any, id: number) => Promise<any>;
