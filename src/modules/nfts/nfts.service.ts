@@ -16,7 +16,10 @@ export class NftsService {
   // Get nft data from chain to validate what users preview
   async findOne(network: string, id: number): Promise<ResponseData> {
     try {
-      const resArr = await this.nftModel.findOne({nftID: id, network});
+      const find = await this.nftModel.findOne({ nftID: id, network });
+      const resArr = find && find.toJSON();
+      delete resArr._id;
+      delete resArr.__v;
       if (resArr && resArr.name)
         return response(resArr, 'Nft found', true);
       
