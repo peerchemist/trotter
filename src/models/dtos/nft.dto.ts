@@ -5,9 +5,6 @@ export class CreateNftDto {
     @ApiProperty({ type: 'string', format: 'binary' })
     file: any;
 
-    @ApiProperty({ required: false })
-    readonly network: string;
-
     @ApiProperty()
     @IsNotEmpty()
     readonly name: string;
