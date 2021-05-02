@@ -26,7 +26,7 @@ export default {
     listedNetworks: {
         'MATIC_MAINNET': 'erc721',
         // 'ETH_MAINNET',
-        // 'BSC_MAINNET': 'erc721',
+        'BSC_MAINNET': 'erc721',
         // 'MATIC_TESTNET',
         // 'BSC_TESTNET',
         'ETH_TESTNET': 'erc721'
