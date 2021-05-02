@@ -229,9 +229,7 @@ export class NftsService {
     return {
       message: "admin address",
       data: {
-        network,
-        adminAddress: address,
-        balance: resbalance
+        ...resbalance
       }
     }
   }
