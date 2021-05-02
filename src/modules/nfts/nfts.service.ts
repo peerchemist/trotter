@@ -14,17 +14,17 @@ export class NftsService {
   constructor(@InjectModel('Nft') private readonly nftModel: Model<any>) { }
 
   // Get nft data from chain to validate what users preview
-  async findOne(id: number): Promise<ResponseData> {
+  async findOne(network: string, id: number): Promise<ResponseData> {
     try {
-      const resArr = await this.nftModel.findOne({nftID: id});
+      const resArr = await this.nftModel.findOne({nftID: id, network});
       if (resArr && resArr.name)
         return response(resArr, 'Nft found', true);
       
       let chainNft: any;
-      if (isErc721()) {
-         chainNft = await getErc721(id);
+      if (isErc721(network)) {
+         chainNft = await getErc721(network, id);
       } else {
-        chainNft = await getNFT(id);
+        chainNft = await getNFT(network, id);
       }
       
       if (chainNft && chainNft.name)
@@ -79,17 +79,17 @@ export class NftsService {
     }
   }
 
-  async create(nft: Nft, fileBuffer: Buffer): Promise<ResponseData> {
+  async create(network: string, nft: Nft, fileBuffer: Buffer): Promise<ResponseData> {
     try {
       const res = await ipfsAdd(fileBuffer);
       nft.ipfsHash = res.path;
 
       let nftRes: any;
-      if (isErc721()) {
-        nftRes = await createErc721(nft);
+      if (isErc721(network)) {
+        nftRes = await createErc721(network, nft);
       } else {
         // send to nft smart contract for mint
-        nftRes = await createNFT(nft);
+        nftRes = await createNFT(network, nft);
       }
 
       // update nft object with nftId created on the blockchain
@@ -105,17 +105,17 @@ export class NftsService {
     }
   }
 
-  async transferNft(id: number, receiver: string): Promise<ResponseData> {
+  async transferNft(network: string, id: number, receiver: string): Promise<ResponseData> {
     try {
       // transfer nft 
       let nftRes: any;
       let chainNft: any;
-      if (isErc721()) {
-        nftRes = await transferErc721("", receiver, id);
-        chainNft = await getErc721(id, "");
+      if (isErc721(network)) {
+        nftRes = await transferErc721(network, receiver, id);
+        chainNft = await getErc721(network, id);
       } else {
-        nftRes = await transferNFT("", receiver, id);
-        chainNft = await getNFT(id, "");
+        nftRes = await transferNFT(network, receiver, id);
+        chainNft = await getNFT(network, id);
       }
 
       if (!chainNft || !chainNft.name)
@@ -129,13 +129,13 @@ export class NftsService {
     }
   }
 
-  async checkBalance(id: number, address: string): Promise<ResponseData> {
+  async checkBalance(network: string, id: number, address: string): Promise<ResponseData> {
     try {
       let nftRes: any;
-      if (isErc721()) {
-        nftRes = await checkErc721Balance(address);
+      if (isErc721(network)) {
+        nftRes = await checkErc721Balance(network, address);
       } else {
-        nftRes = await checkNFTBalance(id, address);
+        nftRes = await checkNFTBalance(network, id, address);
       }
 
       if (!nftRes || !nftRes.balance)
@@ -164,13 +164,13 @@ export class NftsService {
     }
   }
 
-  async fetchTokenHolders(id: number): Promise<ResponseData> {
+  async fetchTokenHolders(network: string, id: number): Promise<ResponseData> {
     try {
       let nftRes: any;
-      if (isErc721()) {
-        nftRes = await fetchErc721s();
+      if (isErc721(network)) {
+        nftRes = await fetchErc721s(network);
       } else {
-        nftRes = await fetchNFTHolders(id);
+        nftRes = await fetchNFTHolders(network, id);
       }
 
       // const chainNfts = await fetchNFTHolders(id);
@@ -199,13 +199,13 @@ export class NftsService {
     }
   }
 
-  async fetchTokenEditions(id: number): Promise<ResponseData> {
+  async fetchTokenEditions(network, id: number): Promise<ResponseData> {
     try {
       let nftRes: any;
-      if (isErc721()) {
+      if (isErc721(network)) {
         return response([], 'Erc721 editions not found', false);
       } else {
-        nftRes = await fetchNFTEditions(id);
+        nftRes = await fetchNFTEditions(network, id);
       }
       
       if (nftRes.length < 1)
@@ -218,9 +218,9 @@ export class NftsService {
     }
   }
 
-  async getAdminAddress(balance?: string): Promise<any> {
-    const [address, nftContract, network] = await getContract();
-    const resbalance = balance == 'balance' ? await checkErc721Balance(address) : undefined;
+  async getAdminAddress(network: string, balance?: string): Promise<any> {
+    const [address, nftContract, ] = await getContract(network);
+    const resbalance = balance == 'balance' ? await checkErc721Balance(network, address) : undefined;
 
     return {
       message: "admin address",
@@ -232,7 +232,7 @@ export class NftsService {
     }
   }
   
-  async getMetadata(id: string): Promise<any> {
+  async getMetadata(network: string, id: string): Promise<any> {
     try {
       const filterId = id.replace(/^0+/, '').split('.')[0];
       const nftId = filterId ? parseInt(filterId) : 0;
@@ -241,10 +241,10 @@ export class NftsService {
       // resData = await this.nftModel.findOne({nftID: nftId});
       // if (!resData || !resData.name) {
         // return response({}, 'Nft not found', false);
-        if (isErc721()) {
-           resData = await getErc721(nftId);
+        if (isErc721(network)) {
+           resData = await getErc721(network, nftId);
         } else {
-          resData = await getNFT(nftId);
+          resData = await getNFT(network, nftId);
         }
       // }
       

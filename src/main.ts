@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { auth } from './middleware/auth.middleware';
+import { validateNetwork } from './middleware/networks.middleware';
 import { TrotterLogger } from './utils/logger';
 
 async function bootstrap() {
@@ -20,7 +21,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
   
-  app.use(auth);
+  app.use(auth, validateNetwork);
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(3000);
 }

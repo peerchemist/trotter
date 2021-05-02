@@ -4,10 +4,10 @@ import { Nft } from 'src/models/interfaces/nft.interface';
 import { structNftResponse } from './response';
 import config from '../config/config';
 
-export const getContract = async (network?: string): Promise<any[]> => {
+export const getContract = async (network: string): Promise<any[]> => {
     const defaultNetwork = config.networks.DEFAULT_NETWORK.replace('API_', '');
     const contracts = config.contracts;
-    const usenetwork = network && contracts[network] && config.networks[network] ? network : defaultNetwork;
+    const usenetwork = contracts[network] && config.networks[network] ? network : defaultNetwork;
     console.log({usenetwork});
     
     const web3 = Web3(usenetwork)
@@ -21,22 +21,17 @@ export const getContract = async (network?: string): Promise<any[]> => {
     return [accounts[0], nftContract, usenetwork, contractAddress, nonce, gasPrice];
 }
 
-export const isErc721 = async (): Promise<Boolean> => {
-    const [account, nftContract, , , nonce, gasPrice]: any[] = await getContract();
-    try {
-        await nftContract.methods.cards().call({ from: account });
-        return false;
-    } catch (error) {
+export const isErc721 = async (network: string): Promise<Boolean> => {
+    if (network && config.listedNetworks[network] === 'erc721')
         return true;
-    }
+    
+    return false;
 }
 
-export const createNFT = async (nft: Nft): Promise<any> => {
+export const createNFT = async (network, nft: Nft): Promise<any> => {
     const [account, nftContract, usenetwork, , nonce, gasPrice]: any[] = await getContract(nft.network);
     const nftData = [nft.name, nft.ipfsHash, nft.price, nft.author, nft.about, JSON.stringify(nft.properties || ''), JSON.stringify(nft.statement || '')];  
-    const res = await nftContract.methods.createNftCard(...nftData, account, nft.editions, 1).send({ from: account, gasPrice, gas: '1000000', nonce });
-    res.network = usenetwork;
-    return res;
+    return await nftContract.methods.createNftCard(...nftData, account, nft.editions, 1).send({ from: account, gasPrice, gas: '1000000', nonce });
 }
 
 export const transferNFT = async (network: string, to: string, nftID: number): Promise<any> => {
@@ -77,8 +72,8 @@ export const fetchNFTs = async (usenetwork?: string): Promise<any> => {
     });
 }
 
-export const fetchNFTHolders = async (id): Promise<any> => {
-    const [account, nftContract, network, contractAddress]: any[] = await getContract();
+export const fetchNFTHolders = async (network, id): Promise<any> => {
+    const [account, nftContract, , contractAddress]: any[] = await getContract(network);
 
     const holders = [];
     let moreHolder = true;
@@ -104,15 +99,15 @@ export const fetchNFTHolders = async (id): Promise<any> => {
     return res;
 }
 
-export const getNFT = async (id: number, useNetwork?: string): Promise<any> => {
-    const [account, nftContract, network, contractAddress]: any[] = await getContract(useNetwork);
+export const getNFT = async (network: string, id: number): Promise<any> => {
+    const [account, nftContract, , contractAddress]: any[] = await getContract(network);
     const res = await nftContract.methods.nfts(id - 1).call({ from: account });
     const nftObj = { ...res, contractAddress }
     return structNftResponse(nftObj, network);
 }
 
-export const checkNFTBalance = async (id: number, address: string): Promise<any> => {
-    const [account, nftContract, network, contractAddress]: any[] = await getContract();
+export const checkNFTBalance = async (network, id: number, address: string): Promise<any> => {
+    const [account, nftContract, , contractAddress]: any[] = await getContract(network);
     const res = await nftContract.methods.balanceOf(address, id).call();
     return {
         network,
@@ -127,11 +122,11 @@ export const mintNFT = async (network: string, nftID: number, to: string, amount
     return await nftContract.methods.mint(to, nftID, amount).send({ from: account, nonce });
 }
 
-export const fetchNFTEditions = async (id: number): Promise<any> => {
-    const [account, nftContract, network, contractAddress]: any[] = await getContract();
+export const fetchNFTEditions = async (network, id: number): Promise<any> => {
+    const [account, nftContract, , contractAddress]: any[] = await getContract(network);
 
     const nft = await nftContract.methods.getNft(id).call({ from: account });
-    const holders = await fetchNFTHolders(id);
+    const holders = await fetchNFTHolders(network, id);
 
     const res = [];
     holders.map((holder) => {
