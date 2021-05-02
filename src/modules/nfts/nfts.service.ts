@@ -94,11 +94,15 @@ export class NftsService {
 
       // update nft object with nftId created on the blockchain
       nft.nftID = nftRes.events.CardAdded.returnValues.id;
-      nft.network = nftRes.network;
+      nft.network = network;
 
       const newNft = new this.nftModel(nft);
       const save = await newNft.save();
-      return response(save, 'Nft created successfully', true, nftRes.transactionHash);
+      const resData = { ...save.toJSON() };
+      delete resData._id;
+      delete resData.__v;
+      
+      return response(resData, 'Nft created successfully', true, nftRes.transactionHash);
     } catch (error) {
       this.logger.error(error);
       return nftResponse(error.message);
