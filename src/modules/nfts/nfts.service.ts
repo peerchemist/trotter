@@ -3,9 +3,9 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Nft, TransferNft, MigrateNft, ResponseData, MintNft } from '../../models/interfaces/nft.interface';
 import { ipfsAdd } from '../../utils/ipfs';
-import { createNFT, transferNFT, migrateNFT, fetchNFTs, getNFT, fetchNFTHolders, checkNFTBalance, mintNFT, fetchNFTEditions, getContract, isErc721 } from 'src/utils/contractHelper';
+import { createNFT, transferNFT, migrateNFT, fetchNFTs, getNFT, fetchNFTHolders, checkNFTBalance, mintNFT, fetchNFTEditions, isErc721 } from 'src/utils/contractHelper';
 import { response, nftResponse } from 'src/utils/response';
-import { checkErc721Balance, createErc721, fetchErc721s, getErc721, transferErc721 } from 'src/utils/erc721Helper';
+import { checkErc721Balance, createErc721, fetchErc721s, getErc721, transferErc721, getContract } from 'src/utils/erc721Helper';
 import { Logger } from "nestjs-pino";
 require('dotenv').config()
 @Injectable()
@@ -88,6 +88,8 @@ export class NftsService {
 
       let nftRes: any;
       if (isErc721(network)) {
+        console.log('here');
+        
         nftRes = await createErc721(network, nft);
       } else {
         // send to nft smart contract for mint
@@ -97,6 +99,8 @@ export class NftsService {
       // update nft object with nftId created on the blockchain
       nft.nftID = nftRes.events.CardAdded.returnValues.id;
       nft.network = network;
+      const [owner]: any[] = await getContract(network);
+      nft.owner = owner;
 
       const newNft = new this.nftModel(nft);
       const save = await newNft.save();
@@ -271,4 +275,27 @@ export class NftsService {
       };
     }
   }
+
+  async listTokens(network: string, address: string): Promise<ResponseData> {
+    try {
+      const findAll = await this.nftModel.find({ network, owner: address });
+      const resArr = findAll && findAll.map(nft => {
+        const data = nft.toJSON();
+        delete data._id;
+        delete data.__v;
+        return data;
+      });
+
+      if (resArr && resArr.length > 0)
+        return response(resArr, 'Nfts listed', true);
+
+      return response({}, 'No Nfts found!!', false);
+    } catch (error) {
+      this.logger.error(error);
+      if (error.message.includes("execution reverted"))
+        return response({}, 'Nft not found!!', false);
+      return nftResponse(error.message);
+    }
+  }
+
 }

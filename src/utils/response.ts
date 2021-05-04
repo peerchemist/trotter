@@ -48,7 +48,7 @@ export const nftResponse = (errMessage: string) => {
 
     const resMsg = errorMsgs.find(msg => errMessage.includes(msg.msg) || errMessage == msg.msg)
 
-    console.log(errMessage);
+    // console.log(errMessage);
     
     if (!resMsg || !resMsg.msg)
         throw new HttpException({
