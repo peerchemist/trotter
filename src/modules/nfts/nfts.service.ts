@@ -13,7 +13,7 @@ export class NftsService {
   constructor(@InjectModel('Nft') private readonly nftModel: Model<any>, private readonly logger: Logger) { }
 
   // Get nft data from chain to validate what users preview
-  async findOne(network: string, id: number): Promise<ResponseData> {
+  async findOne(network: string, id: string): Promise<ResponseData> {
     try {
       const find = await this.nftModel.findOne({ nftID: id, network });
       const resArr = find && find.toJSON();
@@ -26,7 +26,7 @@ export class NftsService {
       if (isErc721(network)) {
          chainNft = await getErc721(network, id);
       } else {
-        chainNft = await getNFT(network, id);
+        chainNft = await getNFT(network, parseInt(id));
       }
 
       if (chainNft && chainNft.name)
@@ -115,7 +115,7 @@ export class NftsService {
     }
   }
 
-  async transferNft(network: string, id: number, receiver: string): Promise<ResponseData> {
+  async transferNft(network: string, id: string, receiver: string): Promise<ResponseData> {
     try {
       // transfer nft
       let nftRes: any;
@@ -124,8 +124,8 @@ export class NftsService {
         nftRes = await transferErc721(network, receiver, id);
         chainNft = await getErc721(network, id);
       } else {
-        nftRes = await transferNFT(network, receiver, id);
-        chainNft = await getNFT(network, id);
+        nftRes = await transferNFT(network, receiver, parseInt(id));
+        chainNft = await getNFT(network, parseInt(id));
       }
 
       if (!chainNft || !chainNft.name)
@@ -244,17 +244,14 @@ export class NftsService {
   
   async getMetadata(network: string, id: string): Promise<any> {
     try {
-      const filterId = id.replace(/^0+/, '').split('.')[0];
-      const nftId = filterId ? parseInt(filterId) : 0;
-
       let resData: any;
       // resData = await this.nftModel.findOne({nftID: nftId});
       // if (!resData || !resData.name) {
         // return response({}, 'Nft not found', false);
         if (isErc721(network)) {
-           resData = await getErc721(network, nftId);
+           resData = await getErc721(network, id);
         } else {
-          resData = await getNFT(network, nftId);
+          resData = await getNFT(network, parseInt(id));
         }
       // }
 

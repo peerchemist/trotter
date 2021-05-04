@@ -71,7 +71,7 @@ export class NftsController {
   @ApiResponse({ status: 400, description: 'invalid input' })
   @ApiResponse({ status: 409, description: 'no tokens.' })
   @ApiResponse({ status: 500, description: 'unexpected error.' })
-  findOne(@Param('tokenId', ParseIntPipe) id: number, @Headers('network') network: Networks = Networks.DEFAULT): Promise<ResponseData> {
+  findOne(@Param('tokenId', ParseIntPipe) id: string, @Headers('network') network: Networks = Networks.DEFAULT): Promise<ResponseData> {
     return this.nftsService.findOne(network, id);
   }
 
@@ -82,7 +82,7 @@ export class NftsController {
   @ApiTags('admin')
   @ApiHeader({ name: 'network', enum: Networks })
   @Post('transfer/:tokenId/:userAddress')
-  transfer(@Param('tokenId', ParseIntPipe) id: number, @Param('userAddress') receiver: string, @Headers('network') network: Networks = Networks.DEFAULT): Promise<ResponseData> {
+  transfer(@Param('tokenId', ParseIntPipe) id: string, @Param('userAddress') receiver: string, @Headers('network') network: Networks = Networks.DEFAULT): Promise<ResponseData> {
     return this.nftsService.transferNft(network, id, receiver);
   }
 

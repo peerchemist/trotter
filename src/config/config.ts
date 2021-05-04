@@ -39,6 +39,14 @@ export default {
         // 'BSC_TESTNET',
         'ETH_TESTNET': 'erc721'
     },
+    networkPrefixes: {
+        9: 'ETH_MAINNET',
+        112: 'MATIC_MAINNET',
+        115: 'BSC_MAINNET',
+        90: 'ETH_TESTNET',
+        1120: 'MATIC_TESTNET',
+        1150: 'BSC_TESTNET',
+    },
     throttler: {
         ttl: process.env['TTL'],
         limit: process.env['LIMIT'],
