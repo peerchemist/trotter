@@ -7,6 +7,7 @@ import { CreateNftDto, MigrateNftDto, MintNftDto, TransferNftDto } from '../../m
 import { ResponseData } from '../../models/interfaces/nft.interface';
 import { NftsService } from './nfts.service';
 import { Logger } from 'nestjs-pino';
+import config from '../../config/config';
 import path from 'path'
 
 const fs = require('fs');
@@ -25,13 +26,25 @@ export class NftsController {
   @ApiBody({
     type: CreateNftDto,
   })
-  @ApiHeader({name: 'network', enum: Networks})
+  @ApiHeader({ name: 'network', enum: Networks })
   @ApiResponse({ status: 201, description: 'item created' })
   @ApiResponse({ status: 400, description: 'invalid input | {msg}' })
   @ApiResponse({ status: 409, description: 'an existing token already exists.' })
   @ApiResponse({ status: 500, description: 'unexpected error.' })
-  @UseInterceptors(FileInterceptor('file'))
-  create(@Body() createNftDto: CreateNftDto, @UploadedFile() file: Express.Multer.File, @Headers('network') network: Networks = Networks.DEFAULT): Promise<ResponseData> {
+  @UseInterceptors(
+    FileInterceptor('file', {
+      limits: {
+        fileSize: config.MULTIPART.MAX_FILE_SIZE,
+        fields: config.MULTIPART.MAX_FIELD_LIMIT,
+        parts: config.MULTIPART.MAX_PARTS,
+      },
+    }),
+  )
+  create(
+    @Body() createNftDto: CreateNftDto,
+    @UploadedFile() file: Express.Multer.File,
+    @Headers('network') network: Networks = Networks.DEFAULT,
+  ): Promise<ResponseData> {
     return this.nftsService.create(network, createNftDto, file.buffer);
   }
 
@@ -40,7 +53,7 @@ export class NftsController {
     description: ''
   })
   @ApiTags('admin')
-  @ApiHeader({name: 'network', enum: Networks})
+  @ApiHeader({ name: 'network', enum: Networks })
   @Post('/token/:tokenId/mint')
   mintNewToken(@Body() mintNftDto: MintNftDto, @Param('tokenId', ParseIntPipe) id: number): Promise<ResponseData> {
     return this.nftsService.mintNewToken(id, mintNftDto);
@@ -51,7 +64,7 @@ export class NftsController {
     description: ''
   })
   @ApiTags('admin')
-  @ApiHeader({name: 'network', enum: Networks})
+  @ApiHeader({ name: 'network', enum: Networks })
   @Get('token/:tokenId')
   @ApiResponse({ status: 201, description: 'token items.' })
   @ApiResponse({ status: 404, description: 'token not found.' })
@@ -67,7 +80,7 @@ export class NftsController {
     description: ''
   })
   @ApiTags('admin')
-  @ApiHeader({name: 'network', enum: Networks})
+  @ApiHeader({ name: 'network', enum: Networks })
   @Post('transfer/:tokenId/:userAddress')
   transfer(@Param('tokenId', ParseIntPipe) id: number, @Param('userAddress') receiver: string, @Headers('network') network: Networks = Networks.DEFAULT): Promise<ResponseData> {
     return this.nftsService.transferNft(network, id, receiver);
@@ -97,9 +110,9 @@ export class NftsController {
     summary: 'Get token balance of {address}.',
     description: ''
   })
-  @ApiHeader({name: 'network', enum: Networks})
+  @ApiHeader({ name: 'network', enum: Networks })
   @Get('/balance/:tokenId/:address')
-  @ApiHeader({name: 'network', enum: Networks})
+  @ApiHeader({ name: 'network', enum: Networks })
   checkBalance(@Param('tokenId', ParseIntPipe) id: number, @Param('address') address: string, @Headers('network') network: Networks = Networks.DEFAULT): Promise<ResponseData> {
     return this.nftsService.checkBalance(network, id, address);
   }
@@ -108,7 +121,7 @@ export class NftsController {
     summary: 'Get list of current owners of this NFT.',
     description: ''
   })
-  @ApiHeader({name: 'network', enum: Networks})
+  @ApiHeader({ name: 'network', enum: Networks })
   @Get('/token/:tokenId/owners')
   findTokenOwners(@Param('tokenId', ParseIntPipe) id: number, @Headers('network') network: Networks = Networks.DEFAULT): Promise<ResponseData> {
     return this.nftsService.fetchTokenHolders(network, id);
@@ -118,7 +131,7 @@ export class NftsController {
     summary: 'List currently issued editions of a NFT.',
     description: ''
   })
-  @ApiHeader({name: 'network', enum: Networks})
+  @ApiHeader({ name: 'network', enum: Networks })
   @Get('/token/:tokenId/editions')
   findTokenEditions(@Param('tokenId', ParseIntPipe) id: number, @Headers('network') network: Networks = Networks.DEFAULT): Promise<ResponseData> {
     return this.nftsService.fetchTokenEditions(network, id);
@@ -129,7 +142,7 @@ export class NftsController {
     description: ''
   })
   @Get('/address')
-  @ApiHeader({name: 'network', enum: Networks})
+  @ApiHeader({ name: 'network', enum: Networks })
   @ApiQuery({ name: 'balance', enum: Balance })
   getAdminAddress(@Query('balance') balance: Balance = Balance.default, @Headers('network') network: Networks = Networks.DEFAULT): Promise<ResponseData> {
     return this.nftsService.getAdminAddress(network, balance);
@@ -140,7 +153,7 @@ export class NftsController {
     description: ''
   })
   @Get('/nfts/:tokenId')
-  @ApiHeader({name: 'network', enum: Networks})
+  @ApiHeader({ name: 'network', enum: Networks })
   getMetadata(@Param('tokenId') id: string, @Headers('network') network: Networks = Networks.DEFAULT): Promise<ResponseData> {
     return this.nftsService.getMetadata(network, id);
   }

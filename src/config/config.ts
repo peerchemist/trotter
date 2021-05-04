@@ -7,6 +7,13 @@ export default {
     adminPassword: process.env['ADMIN_PASSWORD'],
     nodeEnv: process.env['TROTTER_NODE_ENV'],
     isProductionEnvironment: process.env['TROTTER_NODE_ENV'].trim() === 'production',
+    // used for creating a nft api
+    // https://github.com/expressjs/multer#limits
+    MULTIPART: {
+        MAX_FILE_SIZE: parseInt(process.env['MULTIPART_MAX_FILE_SIZE'], 10) || (300 * 1024 * 1024), // 300 MB by default
+        MAX_FIELD_LIMIT: parseInt(process.env['MULTIPART_MAX_FIELD_LIMIT'], 10) || 1000,
+        MAX_PARTS: parseInt(process.env['MULTIPART_MAX_PARTS'], 10) || 100
+    },
     networks: {
         MATIC_MAINNET: process.env['API_MATIC_MAINNET'],
         ETH_MAINNET: process.env['API_ETH_MAINNET'],
