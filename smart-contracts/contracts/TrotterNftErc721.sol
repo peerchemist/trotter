@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 contract TrotterNftErc721 is AccessControl, ERC721("Finite", "FNT") {
     using SafeMath for uint256;
+    using Strings for uint256;
     
     // Used as the URI for all token types by relying on ID substitution, e.g. https://token-cdn-domain/{id}.json
     string private _uri;
@@ -24,9 +25,13 @@ contract TrotterNftErc721 is AccessControl, ERC721("Finite", "FNT") {
     }
 
     uint256 public currentTokenId = 9000;
+    uint256 public tokenPrefix = 9;
     nftMetadata[] public nfts;
     mapping(uint256 => nftMetadata) public getNft;
     mapping(uint256 => address) public nftOwner;
+
+    // events
+    event CardAdded(uint256 id, address newOwner);
 
     constructor(string memory uri_) {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
@@ -51,8 +56,14 @@ contract TrotterNftErc721 is AccessControl, ERC721("Finite", "FNT") {
         _uri = newuri;
     }
 
-    // events
-    event CardAdded(uint256 id, address newOwner);
+    function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+        require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+
+        string memory baseURI = _baseURI();
+        return bytes(baseURI).length > 0
+            ? string(abi.encodePacked(baseURI, tokenPrefix.toString(), '-', tokenId.toString()))
+            : '';
+    }
 
     /**
      * @notice Creates an nft.
