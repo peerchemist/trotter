@@ -41,10 +41,11 @@ export class NftsService {
     }
   }
 
-  async findAll(): Promise<ResponseData> {
+  async findAll(address?: string): Promise<ResponseData> {
     const chainNfts = [];
     try {
-      const resArr = await this.nftModel.find();
+      let resArr: any; 
+      resArr = address ? await this.nftModel.find({owner: address}) : await this.nftModel.find();
       if (resArr.length < 1) {
         return response([], 'No nfts created yet!!', false);
         //   let arr = [];
@@ -272,27 +273,4 @@ export class NftsService {
       };
     }
   }
-
-  async listTokens(network: string, address: string): Promise<ResponseData> {
-    try {
-      const findAll = await this.nftModel.find({ network, owner: address });
-      const resArr = findAll && findAll.map(nft => {
-        const data = nft.toJSON();
-        delete data._id;
-        delete data.__v;
-        return data;
-      });
-
-      if (resArr && resArr.length > 0)
-        return response(resArr, 'Nfts listed', true);
-
-      return response({}, 'No Nfts found!!', false);
-    } catch (error) {
-      this.logger.error(error);
-      if (error.message.includes("execution reverted"))
-        return response({}, 'Nft not found!!', false);
-      return nftResponse(error.message);
-    }
-  }
-
 }

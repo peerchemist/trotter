@@ -101,9 +101,13 @@ export class NftsController {
     description: ''
   })
   @ApiTags('admin')
-  @Get('list')
-  findAll(): Promise<ResponseData> {
-    return this.nftsService.findAll();
+  @ApiQuery({
+    name: 'address',
+    required: false
+    })
+  @Get('/list')
+  findAll(@Query('address') address?: string): Promise<ResponseData> {
+    return this.nftsService.findAll(address);
   }
 
   @ApiOperation({
@@ -172,15 +176,5 @@ export class NftsController {
 
     // This just pipes the read stream to the response object (which goes to the client)
     return readStream.pipe(response);
-  }
-
-  @ApiOperation({
-    summary: 'List all NFT tokens belonging to address.',
-    description: ''
-  })
-  @ApiHeader({name: 'network', enum: Networks})
-  @Get('/list/:address')
-  listTokens(@Param('address') address: string, @Headers('network') network: Networks = Networks.DEFAULT): Promise<ResponseData> {
-    return this.nftsService.listTokens(network, address);
   }
 }
