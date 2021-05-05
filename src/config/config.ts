@@ -56,5 +56,13 @@ export default {
         host: process.env['IPFS_HOST'],
         port: process.env['IPFS_PORT'],
         protocol: process.env['IPFS_PROTOCOL']
+    },
+    db: {
+        dialect: process.env['DB_DIALECT'] || 'mongo',
+        firestore: {
+            defaultCollectionId: process.env['DEFAULT_COLLECTION'] || 'DEFAULT_COLLECTION',
+            projectId: process.env['GOOGLE_PROJECT_ID'],
+            serviceAccountPath: process.env['GOOGLE_APPLICATION_CREDENTIALS']
+        }
     }
 }
