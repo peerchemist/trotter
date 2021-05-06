@@ -24,7 +24,7 @@ contract TrotterNftErc721 is AccessControl, ERC721("Finite", "FNT") {
         string statement;
     }
 
-    uint256 public currentTokenId = 9000;
+    uint256 public currentTokenId = 90000000;
     uint256 public tokenPrefix = 9;
     nftMetadata[] public nfts;
     mapping(uint256 => nftMetadata) public getNft;
