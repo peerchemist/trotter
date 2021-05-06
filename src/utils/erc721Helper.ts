@@ -25,8 +25,10 @@ export const getContract = async (network: string): Promise<any[]> => {
 }
 
 export const getNetworkByPrefix = (tokenId: string) => {
-    const prefix = tokenId.split('-');
-    return config.networkPrefixes[prefix[0]];
+    const split = tokenId.split('-');
+    const network = config.networkPrefixes[split[0]];
+    const tokenid = parseInt(split[1]) || parseInt(split[0]);
+    return [tokenid, network?.toString()]
 }
 
 export const createErc721 = async (network, nft: Nft): Promise<any> => {
@@ -36,9 +38,9 @@ export const createErc721 = async (network, nft: Nft): Promise<any> => {
 }
 
 export const transferErc721 = async (network: string, to: string, nftID: string): Promise<any> => {
-    const networkByPrefix = getNetworkByPrefix(nftID);
+    const [tokenid, networkByPrefix] = getNetworkByPrefix(nftID);
     const [account, nftContract, , , nonce]: any[] = await getContract(networkByPrefix || network);
-    return await nftContract.methods.transferFrom(account, to, nftID).send({ from: account, nonce });
+    return await nftContract.methods.transferFrom(account, to, tokenid).send({ from: account, nonce });
 }
 
 export const fetchErc721s = async (usenetwork?: string): Promise<any> => {
@@ -48,9 +50,9 @@ export const fetchErc721s = async (usenetwork?: string): Promise<any> => {
     const nfts = [];
     const owners = [];
 
-    for (let i = 0; i < nftsCount - 9000000; i++) {
+    for (let i = 0; i < nftsCount - 9000; i++) {
         nfts.push(nftContract.methods.nfts(i).call({ from: account }));
-        owners.push(nftContract.methods.ownerOf(i + 9000000).call());
+        owners.push(nftContract.methods.ownerOf(i + 9000).call());
     }
 
     const resNfts = await Promise.all(nfts);
@@ -63,10 +65,10 @@ export const fetchErc721s = async (usenetwork?: string): Promise<any> => {
 }
 
 export const getErc721 = async (network: string, id: string): Promise<any> => {
-    const networkByPrefix = getNetworkByPrefix(id);
+    const [tokenid, networkByPrefix] = getNetworkByPrefix(id);
     const [account, nftContract, , contractAddress]: any[] = await getContract(networkByPrefix || network);
-    const res = await nftContract.methods.nfts(parseInt(id.split('-')[1]) - 9000000).call();
-    const owner = await nftContract.methods.ownerOf(id).call();
+    const res = await nftContract.methods.nfts(tokenid - 9000).call();
+    const owner = await nftContract.methods.ownerOf(tokenid).call();
     const nftObj = { ...res, contractAddress, owner };
     return structNftResponse(nftObj, network);
 }
