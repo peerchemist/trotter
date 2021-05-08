@@ -35,8 +35,8 @@ export default {
         'MATIC_MAINNET': 'erc721',
         // 'ETH_MAINNET',
         'BSC_MAINNET': 'erc721',
-        // 'MATIC_TESTNET',
-        // 'BSC_TESTNET',
+        'MATIC_TESTNET': 'erc721',
+        'BSC_TESTNET': 'erc721',
         'ETH_TESTNET': 'erc721'
     },
     networkPrefixes: {
