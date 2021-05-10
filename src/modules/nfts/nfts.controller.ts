@@ -82,7 +82,7 @@ export class NftsController {
   @ApiTags('admin')
   @ApiHeader({ name: 'network', enum: Networks })
   @Post('transfer/:tokenId/:userAddress')
-  transfer(@Param('tokenId', ParseIntPipe) id: string, @Param('userAddress') receiver: string, @Headers('network') network: Networks = Networks.DEFAULT): Promise<ResponseData> {
+  transfer(@Param('tokenId') id: string, @Param('userAddress') receiver: string, @Headers('network') network: Networks = Networks.DEFAULT): Promise<ResponseData> {
     return this.nftsService.transferNft(network, id, receiver);
   }
 
