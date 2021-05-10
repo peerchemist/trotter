@@ -260,7 +260,7 @@ export class NftsService {
         name: resData.name,
         description: resData.description || "Trotter Nft collectibles",
         image: `https://ipfs.io/ipfs/${resData.ipfsHash}`,
-        external_url: "https://trotter-test.herokuapp.com/nfts/90-90000005"
+        external_url: ""
       };
     } catch (error) {
       this.logger.error(error);
