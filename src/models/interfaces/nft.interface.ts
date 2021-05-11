@@ -39,8 +39,13 @@ export interface MintNft {
     toAddress: string,
     amount: number,
 }
+
+export interface NftDAOWhereClause {
+    network?: string,
+    address?: string,
+}
 export interface NftDAO {
-    findAll(contractId?: string): Promise<Nft[]>;
+    findAll(whereClause?: NftDAOWhereClause, contractId?: string): Promise<Nft[]>;
     findOne(id: number, network?: string, contractId?: string): Promise<Nft>;
     create(nft: Nft, contractId?: string): Promise<Nft>;
 }

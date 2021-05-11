@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Nft, NftDAO } from '../../models/interfaces/nft.interface';
+import {
+  Nft,
+  NftDAO,
+  NftDAOWhereClause
+} from '../../models/interfaces/nft.interface';
 import { Model } from 'mongoose';
 
 @Injectable()
@@ -22,8 +26,8 @@ export class MongoDB implements NftDAO {
     return model || null;
   }
 
-  async findAll() {
-    let collection = (await this.nftModel.find()) || [];
+  async findAll(whereClause: NftDAOWhereClause) {
+    let collection = (await this.nftModel.find(whereClause)) || [];
     collection = collection.map((model) => {
       const res = model.toJSON();
       delete res._id;

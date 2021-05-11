@@ -6,7 +6,10 @@
 import { Injectable } from '@nestjs/common';
 import { Nft } from '../../models/interfaces/nft.interface';
 import { Firestore } from '@google-cloud/firestore';
-import { NftDAO } from '../../models/interfaces/nft.interface';
+import {
+  NftDAO,
+  NftDAOWhereClause
+} from '../../models/interfaces/nft.interface';
 import config from 'src/config/config';
 import path from 'path';
 
@@ -36,9 +39,21 @@ export class FirestoreDB implements NftDAO {
     );
   }
 
-  async findAll(contractId = config.db.firestore.defaultCollectionId) {
-    const collection = await this.firestore.collection(contractId).get();
-    return collection.docs.map((doc) => doc.data() as Nft);
+  _createWhereClause(collection, whereClause: NftDAOWhereClause) {
+    for (const clause in whereClause) {
+      collection = collection.where(clause, '==', whereClause[clause]);
+    }
+
+    return collection;
+  }
+
+  async findAll(
+    whereClause: NftDAOWhereClause,
+    contractId = config.db.firestore.defaultCollectionId
+  ) {
+    const collection = await this.firestore.collection(contractId);
+    const result = this._createWhereClause(collection, whereClause).get();
+    return result.docs.map((doc) => doc.data() as Nft);
   }
 
   async create(nft: Nft, contractId = config.db.firestore.defaultCollectionId) {

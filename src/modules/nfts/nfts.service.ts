@@ -258,4 +258,21 @@ export class NftsService {
       };
     }
   }
+
+  async listTokens(network: string, address: string): Promise<ResponseData> {
+    try {
+      const resArr = await this.nftModel.findAll({ network, address });
+
+      if (resArr && resArr.length > 0)
+        return response(resArr, 'Nfts listed', true);
+
+      return response({}, 'No Nfts found!!', false);
+    } catch (error) {
+      this.logger.error(error);
+      if (error.message.includes("execution reverted"))
+        return response({}, 'Nft not found!!', false);
+      return nftResponse(error.message);
+    }
+  }
+
 }
