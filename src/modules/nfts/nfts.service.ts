@@ -1,30 +1,29 @@
-import { Injectable, Res } from '@nestjs/common';
-import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
-import { Nft, TransferNft, MigrateNft, ResponseData, MintNft } from '../../models/interfaces/nft.interface';
+import { Inject, Injectable, Res } from '@nestjs/common';
+import { Nft, TransferNft, MigrateNft, ResponseData, MintNft, NftDAO } from '../../models/interfaces/nft.interface';
 import { ipfsAdd } from '../../utils/ipfs';
 import { createNFT, transferNFT, migrateNFT, fetchNFTs, getNFT, fetchNFTHolders, checkNFTBalance, mintNFT, fetchNFTEditions, isErc721 } from 'src/utils/contractHelper';
 import { response, nftResponse } from 'src/utils/response';
 import { checkErc721Balance, createErc721, fetchErc721s, getErc721, transferErc721, getContract } from 'src/utils/erc721Helper';
 import { Logger } from "nestjs-pino";
-require('dotenv').config()
 @Injectable()
 export class NftsService {
-  constructor(@InjectModel('Nft') private readonly nftModel: Model<any>, private readonly logger: Logger) { }
+  constructor(
+    @Inject('NftDAOService') private readonly nftModel: NftDAO,
+    private readonly logger: Logger,
+  ) { }
 
   // Get nft data from chain to validate what users preview
   async findOne(network: string, id: string): Promise<ResponseData> {
     try {
-      const find = await this.nftModel.findOne({ nftID: id, network });
-      const resArr = find && find.toJSON();
-      delete resArr._id;
-      delete resArr.__v;
-      if (resArr && resArr.name)
+      const resArr = await this.nftModel.findOne(id, network);
+
+      if (resArr && resArr.name) {
         return response(resArr, 'Nft found', true);
+      }
 
       let chainNft: any;
       if (isErc721(network)) {
-         chainNft = await getErc721(network, id);
+        chainNft = await getErc721(network, id);
       } else {
         chainNft = await getNFT(network, parseInt(id));
       }
@@ -44,9 +43,9 @@ export class NftsService {
   async findAll(address?: string): Promise<ResponseData> {
     const chainNfts = [];
     try {
-      let resArr: any; 
-      resArr = address ? await this.nftModel.find({owner: address}) : await this.nftModel.find();
-      if (resArr.length < 1) {
+      const nfts = await this.nftModel.findAll({ address });
+
+      if (nfts.length < 1) {
         return response([], 'No nfts created yet!!', false);
         //   let arr = [];
         //   for (let i = 0; i < config.listNetworks.length; i++) {
@@ -66,13 +65,6 @@ export class NftsService {
         //   return response(chainNfts, 'Nfts fetched successfully', true);
       }
 
-      const nfts = resArr.map(nft => {
-        let res = { ...nft.toJSON() };
-        delete res._id;
-        delete res.__v;
-        return res;
-      })
-
       return response(nfts, 'Nfts fetched successfully', true);
     } catch (error) {
       this.logger.error(error);
@@ -90,7 +82,7 @@ export class NftsService {
       let nftRes: any;
       if (isErc721(network)) {
         console.log('here');
-        
+
         nftRes = await createErc721(network, nft);
       } else {
         // send to nft smart contract for mint
@@ -103,13 +95,9 @@ export class NftsService {
       const [owner]: any[] = await getContract(network);
       nft.owner = owner;
 
-      const newNft = new this.nftModel(nft);
-      const save = await newNft.save();
-      const resData = { ...save.toJSON() };
-      delete resData._id;
-      delete resData.__v;
-      
-      return response(resData, 'Nft created successfully', true, nftRes.transactionHash);
+      const newNft = await this.nftModel.create(nft);
+
+      return response(newNft, 'Nft created successfully', true, nftRes.transactionHash);
     } catch (error) {
       this.logger.error(error);
       return nftResponse(error.message);
@@ -165,10 +153,7 @@ export class NftsService {
       // await migrateNFT(nft.fromNetwork, nft.toNetwork, nft.tokenid);
 
       // update nft on database with new network
-      const nftData = await this.nftModel.findOne({ nftID: nft.tokenid });
-      // nftData.network = nft.toNetwork;
-
-      return await nftData.save();
+      return (await this.nftModel.findOne(nft.tokenid)) as any;
     } catch (error) {
       this.logger.error(error);
       return nftResponse(error.message);
@@ -230,7 +215,7 @@ export class NftsService {
   }
 
   async getAdminAddress(network: string, balance?: string): Promise<any> {
-    const [address, nftContract, ] = await getContract(network);
+    const [address, nftContract,] = await getContract(network);
     const resbalance = balance == 'balance' ? await checkErc721Balance(network, address) : undefined;
 
     return {
@@ -242,18 +227,18 @@ export class NftsService {
       }
     }
   }
-  
+
   async getMetadata(network: string, id: string): Promise<any> {
     try {
       let resData: any;
       // resData = await this.nftModel.findOne({nftID: nftId});
       // if (!resData || !resData.name) {
-        // return response({}, 'Nft not found', false);
+      // return response({}, 'Nft not found', false);
       if (isErc721(network)) {
-           resData = await getErc721(network, id);
-        } else {
-          resData = await getNFT(network, parseInt(id));
-        }
+        resData = await getErc721(network, id);
+      } else {
+        resData = await getNFT(network, parseInt(id));
+      }
       // }
 
       return {
@@ -273,4 +258,21 @@ export class NftsService {
       };
     }
   }
+
+  async listTokens(network: string, address: string): Promise<ResponseData> {
+    try {
+      const resArr = await this.nftModel.findAll({ network, address });
+
+      if (resArr && resArr.length > 0)
+        return response(resArr, 'Nfts listed', true);
+
+      return response({}, 'No Nfts found!!', false);
+    } catch (error) {
+      this.logger.error(error);
+      if (error.message.includes("execution reverted"))
+        return response({}, 'Nft not found!!', false);
+      return nftResponse(error.message);
+    }
+  }
+
 }
