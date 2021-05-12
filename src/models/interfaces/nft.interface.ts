@@ -46,6 +46,6 @@ export interface NftDAOWhereClause {
 }
 export interface NftDAO {
     findAll(whereClause?: NftDAOWhereClause, contractId?: string): Promise<Nft[]>;
-    findOne(id: number, network?: string, contractId?: string): Promise<Nft>;
+    findOne(id: number | string, network?: string, contractId?: string): Promise<Nft>;
     create(nft: Nft, contractId?: string): Promise<Nft>;
 }
