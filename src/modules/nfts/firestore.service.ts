@@ -19,7 +19,7 @@ export class FirestoreDB implements NftDAO {
 
   constructor() {
     this.firestore = new Firestore({
-      projectId: config.db.firestore.serviceAccountPath,
+      projectId: config.db.firestore.projectId,
       keyFilename: path.resolve(config.db.firestore.serviceAccountPath),
     });
   }
@@ -30,10 +30,14 @@ export class FirestoreDB implements NftDAO {
     contractId = config.db.firestore.defaultCollectionId,
   ) {
     const collectionRef = this.firestore.collection(contractId);
-    const collectionData = await collectionRef
-      .where('nftID', '==', id)
-      .where('network', '==', network)
-      .get();
+    if (network) {
+      collectionRef.where('network', '==', network);
+    }
+    if (id) {
+      collectionRef.where('nftID', '==', id);
+    }
+    const collectionData = await collectionRef.get();
+
     return (
       (collectionData.docs[0] && (collectionData.docs[0].data() as Nft)) || null
     );
@@ -52,7 +56,8 @@ export class FirestoreDB implements NftDAO {
     contractId = config.db.firestore.defaultCollectionId
   ) {
     const collection = await this.firestore.collection(contractId);
-    const result = this._createWhereClause(collection, whereClause).get();
+    const result = await this._createWhereClause(collection, whereClause).get();
+
     return result.docs.map((doc) => doc.data() as Nft);
   }
 
