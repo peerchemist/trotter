@@ -57,6 +57,11 @@ export default {
         port: process.env['IPFS_PORT'],
         protocol: process.env['IPFS_PROTOCOL']
     },
+    pinata: {
+        pinit: process.env['PINATA_PINNING'],
+        apikey: process.env['PINATA_API_KEY'],
+        secretkey: process.env['PINATA_SECRET_KEY']
+    },
     db: {
         dialect: process.env['DB_DIALECT'] || 'mongo',
         firestore: {
