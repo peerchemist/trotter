@@ -5,7 +5,7 @@ import { Nft, TransferNft, MigrateNft, ResponseData, MintNft } from '../../model
 import { ipfsAdd } from '../../utils/ipfs';
 import { createNFT, transferNFT, migrateNFT, fetchNFTs, getNFT, fetchNFTHolders, checkNFTBalance, mintNFT, fetchNFTEditions, isErc721 } from 'src/utils/contractHelper';
 import { response, nftResponse } from 'src/utils/response';
-import { checkErc721Balance, createErc721, fetchErc721s, getErc721, transferErc721, getContract } from 'src/utils/erc721Helper';
+import { checkErc721Balance, createErc721, fetchErc721s, getErc721, transferErc721, getContract, getNetworkByPrefix } from 'src/utils/erc721Helper';
 import { Logger } from "nestjs-pino";
 require('dotenv').config()
 @Injectable()
@@ -132,8 +132,11 @@ export class NftsService {
       if (!chainNft || !chainNft.name)
         return response({}, 'Nft metadata not found!!', false);
 
-      return response(chainNft, 'Nft transfered successfully', true, nftRes.transactionHash);
+      // update owner address on db
+      const [tokenid, networkByPrefix] = getNetworkByPrefix(id);
+      await this.nftModel.findOneAndUpdate({ nftID: tokenid, network: networkByPrefix || network }, { owner: receiver });
 
+      return response(chainNft, 'Nft transfered successfully', true, nftRes.transactionHash);
     } catch (error) {
       this.logger.error(error);
       return nftResponse(error.message);
