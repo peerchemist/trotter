@@ -16,7 +16,7 @@ Find what is local IP of the trotter docker container:
 
 Open your favorite browser and open this IP:
 
-> $DOCKER_IP_ADDRESS:3000/api
+> \$DOCKER_IP_ADDRESS:3000/api
 
 Play!
 
@@ -25,9 +25,23 @@ Play!
 Configuration is done via environment variables.
 
 ### database
+
+You can use Mongo DB (local via docker) or cloud firestore https://cloud.google.com/firestore
+
+#### mongo (default)
+
 > MONGODB_URL=
 
+#### firestore (process.env.DB_DIALECT=firestore)
+
+> Create a google project
+> Create a service account with cloudd atastore admin rights
+> Enable Firestore API
+> set process.env.GOOGLE_PROJECT_ID
+> set path of your mounted service account credentials through process.env.GOOGLE_APPLICATION_CREDENTIALS (https://cloud.google.com/docs/authentication/production#passing_variable)
+
 ### RPC endpoints
+
 > API_MATIC_TESTNET="https://rpc-mumbai.maticvigil.com/"
 
 > API_MATIC_MAINNET="https://rpc-mainnet.maticvigil.com/"
@@ -39,7 +53,9 @@ Configuration is done via environment variables.
 > API_BSC_TESTNET="https://data-seed-prebsc-1-s1.binance.org:8545"
 
 ### private key seed (for admin account)
+
 > WALLET="input engage salon smooth choose buffalo priority february advice crop visit stand"
 
 ### prod | develop
-TROTTER_NODE_ENV=develop 
+
+TROTTER_NODE_ENV=develop
