@@ -67,4 +67,27 @@ export class FirestoreDB implements NftDAO {
 
     return nft;
   }
+
+  async updateById(
+    id: number,
+    { network, owner },
+    contractId = config.db.firestore.defaultCollectionId
+  ) {
+    const collectionRef = this.firestore.collection(contractId);
+    collectionRef.where('nftID', '==', id);
+    const collectionData = await collectionRef.get();
+    const model = collectionData.docs[0];
+
+    if (!model) {
+      throw new Error('Nft not found');
+    }
+
+    const modelData = model.data();
+    await model.ref.update({
+      network: network || modelData.network,
+      owner: owner || modelData.owner
+    });
+
+    return model.data() as Nft;
+  }
 }

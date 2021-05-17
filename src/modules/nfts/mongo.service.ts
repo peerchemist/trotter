@@ -6,6 +6,7 @@ import {
   NftDAOWhereClause
 } from '../../models/interfaces/nft.interface';
 import { Model } from 'mongoose';
+import { networkInterfaces } from 'node:os';
 
 @Injectable()
 export class MongoDB implements NftDAO {
@@ -46,5 +47,20 @@ export class MongoDB implements NftDAO {
     delete res.__v;
 
     return res;
+  }
+
+  async updateById(id: number, { owner, network }) {
+    const model = await this.nftModel.findOne({
+      nftId: id
+    });
+
+    if (!model) {
+      throw new Error('Nft not found');
+    }
+
+    model.network = network || model.network;
+    model.owner = owner || model.owner;
+
+    return model.save();
   }
 }

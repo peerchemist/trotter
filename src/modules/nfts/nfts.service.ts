@@ -122,7 +122,10 @@ export class NftsService {
 
       // update owner address on db
       const [tokenid, networkByPrefix] = getNetworkByPrefix(id);
-      await this.nftModel.findOneAndUpdate({ nftID: tokenid, network: networkByPrefix || network }, { owner: receiver });
+      await this.nftModel.updateById(tokenid, {
+        network: networkByPrefix || network,
+        owner: receiver
+      });
 
       return response(chainNft, 'Nft transfered successfully', true, nftRes.transactionHash);
     } catch (error) {
