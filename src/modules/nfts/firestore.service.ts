@@ -68,13 +68,15 @@ export class FirestoreDB implements NftDAO {
     return nft;
   }
 
-  async updateById(
+  async updateOwner(
     id: number,
-    { network, owner },
+    network: string,
+    { owner },
     contractId = config.db.firestore.defaultCollectionId
   ) {
     const collectionRef = this.firestore.collection(contractId);
     collectionRef.where('nftID', '==', id);
+    collectionRef.where('network', '==', network);
     const collectionData = await collectionRef.get();
     const model = collectionData.docs[0];
 
@@ -84,7 +86,6 @@ export class FirestoreDB implements NftDAO {
 
     const modelData = model.data();
     await model.ref.update({
-      network: network || modelData.network,
       owner: owner || modelData.owner
     });
 

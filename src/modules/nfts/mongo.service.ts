@@ -14,8 +14,8 @@ export class MongoDB implements NftDAO {
 
   async findOne(id: number, network: string) {
     let model = await this.nftModel.findOne({
-      nftId: id,
-      ...(network ? { network } : {}), // optional
+      nftID: id,
+      network
     });
 
     if (model) {
@@ -49,16 +49,16 @@ export class MongoDB implements NftDAO {
     return res;
   }
 
-  async updateById(id: number, { owner, network }) {
+  async updateOwner(id: number, network: string, { owner }) {
     const model = await this.nftModel.findOne({
-      nftId: id
+      nftID: id,
+      network
     });
 
     if (!model) {
       throw new Error('Nft not found');
     }
 
-    model.network = network || model.network;
     model.owner = owner || model.owner;
 
     return model.save();

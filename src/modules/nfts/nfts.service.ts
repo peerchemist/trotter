@@ -122,8 +122,9 @@ export class NftsService {
 
       // update owner address on db
       const [tokenid, networkByPrefix] = getNetworkByPrefix(id);
-      await this.nftModel.updateById(tokenid, {
-        network: networkByPrefix || network,
+      const usenetwork = networkByPrefix || network;
+      
+      await this.nftModel.updateOwner(tokenid, usenetwork, {
         owner: receiver
       });
 

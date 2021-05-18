@@ -41,6 +41,7 @@ export interface MintNft {
 }
 
 export interface NftDAOWhereClause {
+    nftID?: string,
     network?: string,
     address?: string,
 }
@@ -48,5 +49,5 @@ export interface NftDAO {
     findAll(whereClause?: NftDAOWhereClause, contractId?: string): Promise<Nft[]>;
     findOne(id: number | string, network?: string, contractId?: string): Promise<Nft>;
     create(nft: Nft, contractId?: string): Promise<Nft>;
-    updateById(id: number | string, data: { network?: string, owner?: string }, contractId?: string): Promise<Nft>;
+    updateOwner(id: number | string, network: string, data: { owner?: string }, contractId?: string): Promise<Nft>;
 }
