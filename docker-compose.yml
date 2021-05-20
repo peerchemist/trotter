@@ -66,6 +66,9 @@ services:
       - IPFS_HOST=ipfs.infura.io
       - IPFS_PORT=5001
       - IPFS_PROTOCOL=https
+      - PINATA_PINNING=false
+      - PINATA_API_KEY=
+      - PINATA_SECRET_KEY=
 
     ports:
       - 3000:3000
